@@ -28,5 +28,18 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+ApplyMigrations(app);
 
 app.Run();
+
+
+void ApplyMigrations(IHost app)
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    if (dbContext.Database.GetPendingMigrations().Any())
+    {
+        dbContext.Database.Migrate();
+    }
+}
