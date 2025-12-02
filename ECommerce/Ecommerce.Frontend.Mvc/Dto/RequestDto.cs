@@ -1,8 +1,10 @@
-﻿namespace Ecommerce.Frontend.Mvc.Dto
+﻿using static Ecommerce.Frontend.Mvc.Utility.StaticDetails;
+
+namespace Ecommerce.Frontend.Mvc.Dto
 {
     public record RequestDto
     {
-        public string ApiType { get; set; } = "GET";
+        public ApiType ApiType { get; set; } = ApiType.GET;
         public string Url { get; set; }
         public object? Data { get; set; }
         public string AccessToken { get; set; }
