@@ -1,3 +1,7 @@
+using Ecommerce.Frontend.Mvc.Service;
+using Ecommerce.Frontend.Mvc.Service.IService;
+using Ecommerce.Frontend.Mvc.Utility;
+
 namespace Ecommerce.Frontend.Mvc
 {
     public class Program
@@ -5,6 +9,15 @@ namespace Ecommerce.Frontend.Mvc
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddHttpClient();
+            builder.Services.AddHttpClient<ICouponService, CouponService>();
+
+            StaticDetails.CouponApiBase = builder.Configuration["ServiceUrls:CouponAPI"];
+
+            builder.Services.AddScoped<IBaseService, BaseService>();
+            builder.Services.AddScoped<ICouponService, CouponService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -20,15 +33,15 @@ namespace Ecommerce.Frontend.Mvc
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
