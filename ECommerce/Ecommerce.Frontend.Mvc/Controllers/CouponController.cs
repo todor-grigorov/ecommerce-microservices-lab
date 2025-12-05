@@ -25,6 +25,10 @@ namespace Ecommerce.Frontend.Mvc.Controllers
             {
                 couponDtos = JsonConvert.DeserializeObject<List<CouponDto>>(Convert.ToString(response.Result));
             }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
 
             return View(couponDtos);
         }
@@ -43,9 +47,13 @@ namespace Ecommerce.Frontend.Mvc.Controllers
 
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] ="Coupon created successfully.";
                     return RedirectToAction(nameof(CouponIndex));
                 }
-
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
             }
 
             return View(model);
@@ -61,6 +69,10 @@ namespace Ecommerce.Frontend.Mvc.Controllers
 
                 return View(couponDto);
             }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
 
             return NotFound();
         }
@@ -72,7 +84,12 @@ namespace Ecommerce.Frontend.Mvc.Controllers
 
             if (response != null && response.IsSuccess)
             {
+                TempData["success"] = "Coupon deleted successfully.";
                 return RedirectToAction(nameof(CouponIndex));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
             }
 
             return View(couponDto);
