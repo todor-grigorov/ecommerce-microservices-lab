@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.Services.IdentityAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -55,7 +55,7 @@ namespace ECommerce.Services.IdentityAPI.Controllers
             return Ok(_response);
         }
 
-        [HttpPost("AssignRole")]
+        [HttpPost("assign-role")]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequestDto dto)
         {
             var assignRoleSuccessful = await _authService.AssignRole(dto.Email, dto.Role.ToUpper());
