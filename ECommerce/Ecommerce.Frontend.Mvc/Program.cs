@@ -15,6 +15,7 @@ namespace Ecommerce.Frontend.Mvc
             builder.Services.AddHttpClient<ICouponService, CouponService>();
 
             StaticDetails.CouponApiBase = builder.Configuration["ServiceUrls:CouponAPI"];
+            StaticDetails.IdentityApiBase = builder.Configuration["ServiceUrls:IdentityAPI"];
 
             builder.Services.AddScoped<IBaseService, BaseService>();
             builder.Services.AddScoped<ICouponService, CouponService>();
