@@ -1,6 +1,8 @@
 
 using ECommerce.Services.IdentityAPI.Data;
 using ECommerce.Services.IdentityAPI.Models;
+using ECommerce.Services.IdentityAPI.Service;
+using ECommerce.Services.IdentityAPI.Service.IService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,7 @@ namespace ECommerce.Services.IdentityAPI
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
