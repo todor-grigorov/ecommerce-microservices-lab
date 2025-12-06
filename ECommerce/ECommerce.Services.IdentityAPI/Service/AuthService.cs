@@ -21,6 +21,25 @@ namespace ECommerce.Services.IdentityAPI.Service
             _jwtTokenGenerator = jwtTokenGenerator;
         }
 
+        public async Task<bool> AssignRole(string email, string roleName)
+        {
+            var user = _appDbContext.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+
+            if (user != null)
+            {
+                if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+
+                await _userManager.AddToRoleAsync(user, roleName);
+
+                return true;
+            }
+
+            return false;
+        }
+
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
             var user = _appDbContext.ApplicationUsers.FirstOrDefault(u => u.UserName.ToLower() == loginRequestDto.UserName.ToLower());
