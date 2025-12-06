@@ -13,11 +13,13 @@ namespace Ecommerce.Frontend.Mvc
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddHttpClient();
             builder.Services.AddHttpClient<ICouponService, CouponService>();
+            builder.Services.AddHttpClient<IAuthService, AuthService>();
 
             StaticDetails.CouponApiBase = builder.Configuration["ServiceUrls:CouponAPI"];
             StaticDetails.IdentityApiBase = builder.Configuration["ServiceUrls:IdentityAPI"];
 
             builder.Services.AddScoped<IBaseService, BaseService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ICouponService, CouponService>();
 
             // Add services to the container.
