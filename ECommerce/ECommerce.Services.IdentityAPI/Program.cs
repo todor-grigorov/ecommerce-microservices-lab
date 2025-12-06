@@ -19,6 +19,8 @@ namespace ECommerce.Services.IdentityAPI
             builder.Services.AddDbContext<AppDbContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("postgresConnection")));
 
+            builder.Services.Configure<JwtOptions>(configuration.GetSection("ApiSettings:JwtOptions"));
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();

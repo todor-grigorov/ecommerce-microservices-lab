@@ -9,6 +9,10 @@
       {
         "Path": "Ecommerce.Frontend.Mvc\\Ecommerce.Frontend.Mvc.csproj",
         "Action": "Start"
+      },
+      {
+        "Path": "ECommerce.Services.IdentityAPI\\ECommerce.Services.IdentityAPI.csproj",
+        "Action": "Start"
       }
     ]
   }
