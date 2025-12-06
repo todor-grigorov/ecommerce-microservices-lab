@@ -1,4 +1,8 @@
 
+using ECommerce.Services.IdentityAPI.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 namespace ECommerce.Services.IdentityAPI
 {
     public class Program
@@ -7,7 +11,11 @@ namespace ECommerce.Services.IdentityAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var configuration = builder.Configuration;
+
             // Add services to the container.
+            builder.Services.AddDbContext<AppDbContext>(opts =>
+                opts.UseNpgsql(configuration.GetConnectionString("postgresConnection")));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -24,13 +32,24 @@ namespace ECommerce.Services.IdentityAPI
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
             app.MapControllers();
-
+            ApplyMigrations(app);
             app.Run();
+
+            void ApplyMigrations(IHost app)
+            {
+                using var scope = app.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                if (dbContext.Database.GetPendingMigrations().Any())
+                {
+                    dbContext.Database.Migrate();
+                }
+            }
         }
     }
 }
