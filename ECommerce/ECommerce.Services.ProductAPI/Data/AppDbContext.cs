@@ -1,7 +1,7 @@
 ﻿using ECommerce.Services.ProductAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ECommerce.Services.CouponAPI.Data
+namespace ECommerce.Services.ProdictAPI.Data
 {
     public class AppDbContext : DbContext
     {
