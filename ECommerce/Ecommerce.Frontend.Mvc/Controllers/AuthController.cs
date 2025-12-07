@@ -49,6 +49,7 @@ namespace Ecommerce.Frontend.Mvc.Controllers
             else
             {
                 ModelState.AddModelError("CustomError", responseDto.Message);
+                TempData["error"] = responseDto.Message;
 
                 return View(obj);
             }
@@ -98,6 +99,10 @@ namespace Ecommerce.Frontend.Mvc.Controllers
                     TempData["success"] = "Registration Successful";
 
                     return RedirectToAction(nameof(Login));
+                }
+                else
+                {
+                    TempData["error"] = result.Message;
                 }
             }
 
