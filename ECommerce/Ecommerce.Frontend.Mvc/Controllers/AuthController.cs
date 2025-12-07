@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web.Providers.Entities;
 
 namespace Ecommerce.Frontend.Mvc.Controllers
@@ -111,9 +112,12 @@ namespace Ecommerce.Frontend.Mvc.Controllers
             return View(obj);
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            return View();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            _tokenProvider.ClearToken();
+                
+            return RedirectToAction("Index", "Home");
         }
 
         private async Task SignInUser(LoginResponseDto loginRequestDto)
