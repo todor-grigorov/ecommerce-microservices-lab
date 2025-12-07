@@ -51,7 +51,8 @@ namespace ECommerce.Services.IdentityAPI.Service
                 return new LoginResponseDto() { User = new UserDto(), Token = "" };
             }
 
-            var token = _jwtTokenGenerator.GenerateToken(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            var token = _jwtTokenGenerator.GenerateToken(user, roles);
 
             UserDto userDto = new UserDto()
             {

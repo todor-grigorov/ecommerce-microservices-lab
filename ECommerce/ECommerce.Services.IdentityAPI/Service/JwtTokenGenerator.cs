@@ -16,7 +16,7 @@ namespace ECommerce.Services.IdentityAPI.Service
             _jwtOptions = jwtOptions.Value;
         }
 
-        public string GenerateToken(ApplicationUser user)
+        public string GenerateToken(ApplicationUser user, IEnumerable<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -28,6 +28,8 @@ namespace ECommerce.Services.IdentityAPI.Service
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Name, user.UserName),
             };
+
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
