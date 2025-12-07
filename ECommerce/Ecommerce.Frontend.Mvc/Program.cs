@@ -1,6 +1,7 @@
 using Ecommerce.Frontend.Mvc.Service;
 using Ecommerce.Frontend.Mvc.Service.IService;
 using Ecommerce.Frontend.Mvc.Utility;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Ecommerce.Frontend.Mvc
 {
@@ -18,9 +19,18 @@ namespace Ecommerce.Frontend.Mvc
             StaticDetails.CouponApiBase = builder.Configuration["ServiceUrls:CouponAPI"];
             StaticDetails.IdentityApiBase = builder.Configuration["ServiceUrls:IdentityAPI"];
 
+            builder.Services.AddScoped<ITokenProvider, TokenProvider>();
             builder.Services.AddScoped<IBaseService, BaseService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ICouponService, CouponService>();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.ExpireTimeSpan = TimeSpan.FromHours(10);
+                    options.LoginPath = "/Auth/Login";
+                    //options.LogoutPath = "/Auth/Logout";
+                    options.AccessDeniedPath = "/Auth/AccessDenied";
+                });
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -39,7 +49,7 @@ namespace Ecommerce.Frontend.Mvc
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();    
             app.UseAuthorization();
 
             app.MapControllerRoute(
