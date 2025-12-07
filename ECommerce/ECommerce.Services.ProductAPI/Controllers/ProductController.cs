@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECommerce.Services.ProdictAPI.Data;
 using ECommerce.Services.ProductAPI.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.Services.ProductAPI.Controllers
@@ -21,6 +22,7 @@ namespace ECommerce.Services.ProductAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetProducts()
         {
             try
@@ -39,6 +41,7 @@ namespace ECommerce.Services.ProductAPI.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
+        [Authorize]
         public IActionResult GetById(int id)
         {
             try
@@ -57,6 +60,7 @@ namespace ECommerce.Services.ProductAPI.Controllers
 
         [HttpGet]
         [Route("GetProductByCategory/{categoryName}")]
+        [Authorize]
         public IActionResult GetProductByCategory(string categoryName)
         {
             try
@@ -75,6 +79,7 @@ namespace ECommerce.Services.ProductAPI.Controllers
 
         [HttpGet]
         [Route("GetProductByName/{productName}")]
+        [Authorize]
         public IActionResult GetProductByName(string productName)
         {
             try
@@ -93,6 +98,7 @@ namespace ECommerce.Services.ProductAPI.Controllers
 
         [HttpGet]
         [Route("search/{productName}/{categoryName}")]
+        [Authorize]
         public IActionResult SearchProducts(string productName, string categoryName)
         {
             try
@@ -112,6 +118,7 @@ namespace ECommerce.Services.ProductAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult CreateProduct([FromBody] ProductDto productDto)
         {
             try
@@ -131,6 +138,7 @@ namespace ECommerce.Services.ProductAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult UpdateProduct([FromBody] ProductDto productDto)
         {
             try
@@ -150,6 +158,7 @@ namespace ECommerce.Services.ProductAPI.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult DeleteProduct(int id)
         {
             try
