@@ -20,7 +20,7 @@ namespace Ecommerce.Frontend.Mvc.Service
                 ApiType = StaticDetails.ApiType.POST,
                 Data = assignRoleRequestDto,
                 Url = StaticDetails.IdentityApiBase + "/api/auth/assign-role"
-            });
+            }, withBearer: false);
         }
 
         public async Task<ResponseDto?> LoginAsync(LoginRequestDto loginRequestDto)
@@ -30,7 +30,7 @@ namespace Ecommerce.Frontend.Mvc.Service
                 ApiType = StaticDetails.ApiType.POST,
                 Data = loginRequestDto,
                 Url = StaticDetails.IdentityApiBase + "/api/auth/login"
-            });
+            }, withBearer: false);
         }
 
         public async Task<ResponseDto?> RegisterAsync(RegistrationRequestDto registrationRequestDto)
@@ -40,7 +40,7 @@ namespace Ecommerce.Frontend.Mvc.Service
                 ApiType = StaticDetails.ApiType.POST,
                 Data = registrationRequestDto,
                 Url = StaticDetails.IdentityApiBase + "/api/auth/register"
-            });
+            }, withBearer: false);
         }
     }
 }
