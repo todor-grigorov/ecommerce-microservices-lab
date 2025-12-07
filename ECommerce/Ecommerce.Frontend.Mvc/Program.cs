@@ -18,11 +18,14 @@ namespace Ecommerce.Frontend.Mvc
 
             StaticDetails.CouponApiBase = builder.Configuration["ServiceUrls:CouponAPI"];
             StaticDetails.IdentityApiBase = builder.Configuration["ServiceUrls:IdentityAPI"];
+            StaticDetails.ProductApiBase = builder.Configuration["ServiceUrls:ProductAPI"];
 
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
             builder.Services.AddScoped<IBaseService, BaseService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ICouponService, CouponService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
@@ -49,7 +52,7 @@ namespace Ecommerce.Frontend.Mvc
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseAuthentication();    
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
