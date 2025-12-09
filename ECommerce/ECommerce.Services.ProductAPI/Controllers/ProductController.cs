@@ -22,7 +22,6 @@ namespace ECommerce.Services.ProductAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult GetProducts()
         {
             try
@@ -41,7 +40,6 @@ namespace ECommerce.Services.ProductAPI.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        [Authorize]
         public IActionResult GetById(int id)
         {
             try
