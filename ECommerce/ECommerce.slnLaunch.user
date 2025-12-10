@@ -17,6 +17,10 @@
       {
         "Path": "ECommerce.Services.ProductAPI\\ECommerce.Services.ProductAPI.csproj",
         "Action": "Start"
+      },
+      {
+        "Path": "ECommerce.Services.ShoppingCartAPI\\ECommerce.Services.ShoppingCartAPI.csproj",
+        "Action": "Start"
       }
     ]
   }
