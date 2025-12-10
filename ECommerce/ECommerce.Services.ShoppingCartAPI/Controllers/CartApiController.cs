@@ -88,6 +88,34 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
             return _responseDto;
         }
 
+        [HttpPost("RemoveCoupon")]
+        public async Task<ResponseDto> RemoveCoupon([FromBody] CartDto cartDto)
+        {
+            try
+            {
+                var existingCartHeader = await _dbContext.CartHeaders
+                    .FirstOrDefaultAsync(c => c.UserId == cartDto.CartHeader.UserId);
+                if (existingCartHeader != null)
+                {
+                    existingCartHeader.CouponCode = "";
+                    _dbContext.CartHeaders.Update(existingCartHeader);
+                    await _dbContext.SaveChangesAsync();
+                    _responseDto.Result = true;
+                }
+                else
+                {
+                    _responseDto.IsSuccess = false;
+                    _responseDto.Message = "Cart not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _responseDto.IsSuccess = false;
+                _responseDto.Message = ex.Message.ToString();
+            }
+            return _responseDto;
+        }
+
         [HttpPost("CartUpsert")]
         public async Task<ResponseDto> CartUpsert(CartDto cartDto)
         {
