@@ -22,7 +22,7 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
             _dbContext = dbContext;
             _productService = productService;
             _mapper = mapper;
-            this._responseDto = new ResponseDto();
+            _responseDto = new ResponseDto();
         }
 
         [HttpGet("GetCart/{userId}")]
