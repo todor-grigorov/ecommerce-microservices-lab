@@ -2,6 +2,7 @@
 using ECommerce.Services.ShoppingCartAPI.Data;
 using ECommerce.Services.ShoppingCartAPI.Dto;
 using ECommerce.Services.ShoppingCartAPI.Models;
+using ECommerce.Services.ShoppingCartAPI.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,12 +15,49 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
         private ResponseDto _responseDto;
         private IMapper _mapper;
         private readonly AppDbContext _dbContext;
+        private readonly IProductService _productService;
 
-        public CartApiController(AppDbContext dbContext, IMapper mapper)
+        public CartApiController(AppDbContext dbContext, IProductService productService, IMapper mapper)
         {
             _dbContext = dbContext;
+            _productService = productService;
             _mapper = mapper;
             this._responseDto = new ResponseDto();
+        }
+
+        [HttpGet("GetCart/{userId}")]
+        public async Task<ResponseDto> GetCart(string userIdcartDetailsId)
+        {
+            try
+            {
+                var cartHeader = await _dbContext.CartHeaders
+                    .FirstOrDefaultAsync(c => c.UserId == userIdcartDetailsId);
+                var cartDetails = _dbContext.CartDetails
+                    .Where(c => c.CartHeaderId == cartHeader.CartHeaderId)
+                    .ToList();
+
+                var cartDto = new CartDto
+                {
+                    CartHeader = _mapper.Map<CartHeaderDto>(cartHeader),
+                    CartDetails = _mapper.Map<List<CartDetailsDto>>(cartDetails)
+                };
+
+                IEnumerable<ProductDto> productDtos = await _productService.GetProducts();
+
+                foreach (var detail in cartDto.CartDetails)
+                {
+                    detail.Product = productDtos.FirstOrDefault(p => p.ProductId == detail.ProductId)!;
+                    cartDto.CartHeader.CartTotal += detail.Product.Price * detail.Count;
+                }
+
+                _responseDto.Result = cartDto;
+            }
+            catch (Exception ex)
+            {
+                _responseDto.IsSuccess = false;
+                _responseDto.Message = ex.Message.ToString();
+            }
+            return _responseDto;
         }
 
         [HttpPost("CartUpsert")]
