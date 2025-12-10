@@ -9,7 +9,7 @@ namespace ECommerce.Services.CouponAPI.Models
         [Required]
         public string CouponCode { get; set; }
         [Required]
-        public decimal DiscountAmount { get; set; }
+        public double DiscountAmount { get; set; }
         public int MinAmount { get; set; }
     }
 }
