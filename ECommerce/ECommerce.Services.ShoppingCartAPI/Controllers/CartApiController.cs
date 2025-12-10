@@ -78,5 +78,38 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
             return _responseDto;
         }
 
+        [HttpPost("RemoveCart")]
+        public async Task<ResponseDto> RemoveCart([FromBody] int cartDetailsId)
+        {
+            try
+            {
+                CartDetails existingCartDetails = _dbContext.CartDetails.First(c => c.CartDetailsId == cartDetailsId);
+
+                int totalCountOfCartItems = _dbContext.CartDetails
+                    .Where(c => c.CartHeaderId == existingCartDetails.CartHeaderId)
+                    .Count();
+
+                _dbContext.CartDetails.Remove(existingCartDetails);
+
+                if (totalCountOfCartItems == 1)
+                {
+                    // Remove CartHeader if this is the last item
+                    CartHeader cartHeaderToRemove = _dbContext.CartHeaders.First(c => c.CartHeaderId == existingCartDetails.CartHeaderId);
+                    _dbContext.CartHeaders.Remove(cartHeaderToRemove);
+                }
+
+                await _dbContext.SaveChangesAsync();
+                _responseDto.Result = true;
+            }
+            catch (Exception ex)
+            {
+                _responseDto.IsSuccess = false;
+                _responseDto.Message = ex.Message.ToString();
+            }
+
+            return _responseDto;
+
+        }
+
     }
 }
