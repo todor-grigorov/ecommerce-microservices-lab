@@ -28,12 +28,12 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpGet("GetCart/{userId}")]
-        public async Task<ResponseDto> GetCart(string userIdcartDetailsId)
+        public async Task<ResponseDto> GetCart(string userId)
         {
             try
             {
                 var cartHeader = await _dbContext.CartHeaders
-                    .FirstOrDefaultAsync(c => c.UserId == userIdcartDetailsId);
+                    .FirstOrDefaultAsync(c => c.UserId == userId);
                 var cartDetails = _dbContext.CartDetails
                     .Where(c => c.CartHeaderId == cartHeader.CartHeaderId)
                     .ToList();
@@ -50,6 +50,21 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
                 {
                     detail.Product = productDtos.FirstOrDefault(p => p.ProductId == detail.ProductId)!;
                     cartDto.CartHeader.CartTotal += detail.Product.Price * detail.Count;
+                }
+
+                // Apply coupon if any
+                var couponCode = cartDto.CartHeader.CouponCode;
+                var cartTotal = cartDto.CartHeader.CartTotal;
+
+                if (!string.IsNullOrEmpty(cartDto.CartHeader.CouponCode))
+                {
+                    CouponDto couponDto = await _couponService.GetCoupon(couponCode);
+
+                    if (couponDto != null && cartTotal > couponDto.MinAmount)
+                    {
+                        cartDto.CartHeader.CartTotal -= couponDto.DiscountAmount;
+                        cartDto.CartHeader.Discount = couponDto.DiscountAmount;
+                    }
                 }
 
                 _responseDto.Result = cartDto;
