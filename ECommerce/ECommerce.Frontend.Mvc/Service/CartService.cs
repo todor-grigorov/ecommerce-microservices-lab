@@ -23,6 +23,16 @@ namespace ECommerce.Frontend.Mvc.Service
             });
         }
 
+        public async Task<ResponseDto?> RemoveCouponAsync(CartDto cartDto)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = StaticDetails.ApiType.POST,
+                Data = cartDto,
+                Url = StaticDetails.ShoppingCartApiBase + "/api/cart/RemoveCoupon"
+            });
+        }
+
         public async Task<ResponseDto?> GetCartByUserIdAsync(string userId)
         {
             return await _baseService.SendAsync(new RequestDto()

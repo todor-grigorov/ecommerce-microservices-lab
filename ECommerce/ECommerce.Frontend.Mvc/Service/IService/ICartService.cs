@@ -8,6 +8,6 @@ namespace ECommerce.Frontend.Mvc.Service.IService
         Task<ResponseDto> UpsertCartAsync(CartDto cartDto);
         Task<ResponseDto> RemoveFromCartAsync(int cartDetailsId);
         Task<ResponseDto> ApplyCouponAsync(CartDto cartDto);
-        //Task<ResponseDto> RemoveCouponAsync(CartDto cartDto);
+        Task<ResponseDto> RemoveCouponAsync(CartDto cartDto);
     }
 }
