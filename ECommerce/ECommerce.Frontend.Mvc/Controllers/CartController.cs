@@ -36,6 +36,35 @@ namespace ECommerce.Frontend.Mvc.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ApplyCoupon(CartDto cartDto)
+        {
+            var response = await _cartService.ApplyCouponAsync(cartDto);
+
+            if (response != null && response.IsSuccess && response.Result != null)
+            {
+                TempData["success"] = "Coupon applied successfully";
+                return RedirectToAction(nameof(CartIndex));
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveCoupon(CartDto cartDto)
+        {
+            cartDto.CartHeader.CouponCode = "";
+            var response = await _cartService.RemoveCouponAsync(cartDto);
+
+            if (response != null && response.IsSuccess && response.Result != null)
+            {
+                TempData["success"] = "Coupon applied successfully";
+                return RedirectToAction(nameof(CartIndex));
+            }
+
+            return View();
+        }
+
         private async Task<CartDto> LoadCartDtoBasedOnLoggedInUser()
         {
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
