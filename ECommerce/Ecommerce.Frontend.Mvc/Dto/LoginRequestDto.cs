@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Ecommerce.Frontend.Mvc.Dto
+namespace ECommerce.Frontend.Mvc.Dto
 {
     public class LoginRequestDto
     {

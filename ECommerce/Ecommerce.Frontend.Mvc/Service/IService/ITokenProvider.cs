@@ -1,4 +1,4 @@
-﻿namespace Ecommerce.Frontend.Mvc.Service.IService
+﻿namespace ECommerce.Frontend.Mvc.Service.IService
 {
     public interface ITokenProvider
     {

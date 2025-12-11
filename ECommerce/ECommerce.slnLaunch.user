@@ -7,7 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "Ecommerce.Frontend.Mvc\\Ecommerce.Frontend.Mvc.csproj",
+        "Path": "ECommerce.Frontend.Mvc\\ECommerce.Frontend.Mvc.csproj",
         "Action": "Start"
       },
       {

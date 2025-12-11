@@ -1,11 +1,10 @@
-﻿using Ecommerce.Frontend.Mvc.Dto;
-using Ecommerce.Frontend.Mvc.Service.IService;
-using Ecommerce.Frontend.Mvc.Utility;
+﻿using ECommerce.Frontend.Mvc.Dto;
+using ECommerce.Frontend.Mvc.Service.IService;
 using Newtonsoft.Json;
 using System.Text;
-using static Ecommerce.Frontend.Mvc.Utility.StaticDetails;
+using static ECommerce.Frontend.Mvc.Utility.StaticDetails;
 
-namespace Ecommerce.Frontend.Mvc.Service
+namespace ECommerce.Frontend.Mvc.Service
 {
     public class BaseService : IBaseService
     {
@@ -24,7 +23,7 @@ namespace Ecommerce.Frontend.Mvc.Service
             {
 
 
-                HttpClient client = _httpClientFactory.CreateClient("EcommerceAPI");
+                HttpClient client = _httpClientFactory.CreateClient("ECommerceAPI");
                 HttpRequestMessage message = new HttpRequestMessage();
                 message.Headers.Add("Accept", "application/json");
                 //token

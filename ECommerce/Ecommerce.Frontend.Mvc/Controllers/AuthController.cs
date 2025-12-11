@@ -1,6 +1,6 @@
-﻿using Ecommerce.Frontend.Mvc.Dto;
-using Ecommerce.Frontend.Mvc.Service.IService;
-using Ecommerce.Frontend.Mvc.Utility;
+﻿using ECommerce.Frontend.Mvc.Dto;
+using ECommerce.Frontend.Mvc.Service.IService;
+using ECommerce.Frontend.Mvc.Utility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web.Providers.Entities;
 
-namespace Ecommerce.Frontend.Mvc.Controllers
+namespace ECommerce.Frontend.Mvc.Controllers
 {
     public class AuthController : Controller
     {
@@ -121,7 +119,7 @@ namespace Ecommerce.Frontend.Mvc.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             _tokenProvider.ClearToken();
-                
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -141,7 +139,7 @@ namespace Ecommerce.Frontend.Mvc.Controllers
 
 
 
-            var  principal = new ClaimsPrincipal(identity);
+            var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
     }

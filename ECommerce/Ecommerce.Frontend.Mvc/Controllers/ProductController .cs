@@ -1,9 +1,9 @@
-﻿using Ecommerce.Frontend.Mvc.Dto;
-using Ecommerce.Frontend.Mvc.Service.IService;
+﻿using ECommerce.Frontend.Mvc.Dto;
+using ECommerce.Frontend.Mvc.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-namespace Ecommerce.Frontend.Mvc.Controllers
+namespace ECommerce.Frontend.Mvc.Controllers
 {
     public class ProductController : Controller
     {

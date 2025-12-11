@@ -1,9 +1,9 @@
-using Ecommerce.Frontend.Mvc.Service;
-using Ecommerce.Frontend.Mvc.Service.IService;
-using Ecommerce.Frontend.Mvc.Utility;
+using ECommerce.Frontend.Mvc.Service;
+using ECommerce.Frontend.Mvc.Service.IService;
+using ECommerce.Frontend.Mvc.Utility;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace Ecommerce.Frontend.Mvc
+namespace ECommerce.Frontend.Mvc
 {
     public class Program
     {
@@ -16,9 +16,10 @@ namespace Ecommerce.Frontend.Mvc
             builder.Services.AddHttpClient<ICouponService, CouponService>();
             builder.Services.AddHttpClient<IAuthService, AuthService>();
 
-            StaticDetails.CouponApiBase = builder.Configuration["ServiceUrls:CouponAPI"];
-            StaticDetails.IdentityApiBase = builder.Configuration["ServiceUrls:IdentityAPI"];
-            StaticDetails.ProductApiBase = builder.Configuration["ServiceUrls:ProductAPI"];
+            StaticDetails.CouponApiBase = builder.Configuration["ServiceUrls:CouponApi"];
+            StaticDetails.IdentityApiBase = builder.Configuration["ServiceUrls:IdentityApi"];
+            StaticDetails.ProductApiBase = builder.Configuration["ServiceUrls:ProductApi"];
+            StaticDetails.ShoppingCartApiBase = builder.Configuration["ServiceUrls:ShoppingCartApi"];
 
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
             builder.Services.AddScoped<IBaseService, BaseService>();

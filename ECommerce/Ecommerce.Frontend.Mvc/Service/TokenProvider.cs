@@ -1,14 +1,13 @@
-﻿using Ecommerce.Frontend.Mvc.Service.IService;
-using Ecommerce.Frontend.Mvc.Utility;
-using Newtonsoft.Json.Linq;
+﻿using ECommerce.Frontend.Mvc.Service.IService;
+using ECommerce.Frontend.Mvc.Utility;
 
-namespace Ecommerce.Frontend.Mvc.Service
+namespace ECommerce.Frontend.Mvc.Service
 {
     public class TokenProvider : ITokenProvider
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public TokenProvider(IHttpContextAccessor httpContextAccessor) 
+        public TokenProvider(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

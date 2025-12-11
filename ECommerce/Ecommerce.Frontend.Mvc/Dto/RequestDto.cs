@@ -1,6 +1,6 @@
-﻿using static Ecommerce.Frontend.Mvc.Utility.StaticDetails;
+﻿using static ECommerce.Frontend.Mvc.Utility.StaticDetails;
 
-namespace Ecommerce.Frontend.Mvc.Dto
+namespace ECommerce.Frontend.Mvc.Dto
 {
     public record RequestDto
     {

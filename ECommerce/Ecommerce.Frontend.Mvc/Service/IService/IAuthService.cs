@@ -1,6 +1,6 @@
-﻿using Ecommerce.Frontend.Mvc.Dto;
+﻿using ECommerce.Frontend.Mvc.Dto;
 
-namespace Ecommerce.Frontend.Mvc.Service.IService
+namespace ECommerce.Frontend.Mvc.Service.IService
 {
     public interface IAuthService
     {

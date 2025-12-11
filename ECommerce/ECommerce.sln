@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{CD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.CouponAPI", "ECommerce.Services.CouponAPI\ECommerce.Services.CouponAPI.csproj", "{958C1B03-62C0-494D-BA52-E4E359536748}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Frontend.Mvc", "Ecommerce.Frontend.Mvc\Ecommerce.Frontend.Mvc.csproj", "{1FCE3F34-F566-4147-98FD-1599A264CB01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Frontend.Mvc", "Ecommerce.Frontend.Mvc\ECommerce.Frontend.Mvc.csproj", "{1FCE3F34-F566-4147-98FD-1599A264CB01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.IdentityAPI", "ECommerce.Services.IdentityAPI\ECommerce.Services.IdentityAPI.csproj", "{A2E3A5E5-D90E-432C-ABC5-ADC32AFA1A38}"
 EndProject

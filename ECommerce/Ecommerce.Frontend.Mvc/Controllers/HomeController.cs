@@ -1,12 +1,12 @@
-using Ecommerce.Frontend.Mvc.Dto;
-using Ecommerce.Frontend.Mvc.Models;
-using Ecommerce.Frontend.Mvc.Service.IService;
+using ECommerce.Frontend.Mvc.Dto;
+using ECommerce.Frontend.Mvc.Models;
+using ECommerce.Frontend.Mvc.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 
-namespace Ecommerce.Frontend.Mvc.Controllers
+namespace ECommerce.Frontend.Mvc.Controllers
 {
     public class HomeController : Controller
     {

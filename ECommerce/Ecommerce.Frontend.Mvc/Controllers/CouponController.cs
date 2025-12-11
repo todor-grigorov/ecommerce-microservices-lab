@@ -1,10 +1,9 @@
-﻿using Ecommerce.Frontend.Mvc.Dto;
-using Ecommerce.Frontend.Mvc.Service.IService;
+﻿using ECommerce.Frontend.Mvc.Dto;
+using ECommerce.Frontend.Mvc.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Reflection;
 
-namespace Ecommerce.Frontend.Mvc.Controllers
+namespace ECommerce.Frontend.Mvc.Controllers
 {
     public class CouponController : Controller
     {
@@ -47,7 +46,7 @@ namespace Ecommerce.Frontend.Mvc.Controllers
 
                 if (response != null && response.IsSuccess)
                 {
-                    TempData["success"] ="Coupon created successfully.";
+                    TempData["success"] = "Coupon created successfully.";
                     return RedirectToAction(nameof(CouponIndex));
                 }
                 else

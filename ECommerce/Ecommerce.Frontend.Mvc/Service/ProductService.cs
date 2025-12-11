@@ -1,8 +1,8 @@
-﻿using Ecommerce.Frontend.Mvc.Dto;
-using Ecommerce.Frontend.Mvc.Service.IService;
-using Ecommerce.Frontend.Mvc.Utility;
+﻿using ECommerce.Frontend.Mvc.Dto;
+using ECommerce.Frontend.Mvc.Service.IService;
+using ECommerce.Frontend.Mvc.Utility;
 
-namespace Ecommerce.Frontend.Mvc.Service
+namespace ECommerce.Frontend.Mvc.Service
 {
     public class ProductService : IProductService
     {
