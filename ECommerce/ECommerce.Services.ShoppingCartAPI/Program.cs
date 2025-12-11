@@ -2,6 +2,7 @@ using ECommerce.Services.ShoppingCartAPI.Data;
 using ECommerce.Services.ShoppingCartAPI.Extensions;
 using ECommerce.Services.ShoppingCartAPI.Service;
 using ECommerce.Services.ShoppingCartAPI.Service.IService;
+using ECommerce.Services.ShoppingCartAPI.Utility;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,9 +13,11 @@ var configuration = builder.Configuration;
 builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
 builder.Services.AddDbContext<AppDbContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("postgresConnection")));
-builder.Services.AddHttpClient("Product", c => c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductAPI"]));
-builder.Services.AddHttpClient("Coupon", c => c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:CouponAPI"]));
+builder.Services.AddHttpClient("Product", c => c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductAPI"])).AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
+builder.Services.AddHttpClient("Coupon", c => c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:CouponAPI"])).AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 
 builder.Services.AddControllers();
