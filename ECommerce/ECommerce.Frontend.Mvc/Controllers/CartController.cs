@@ -1,25 +1,24 @@
 ﻿using ECommerce.Frontend.Mvc.Dto;
 using ECommerce.Frontend.Mvc.Service.IService;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace ECommerce.Frontend.Mvc.Controllers
 {
-    public class CartController1 : Controller
+    public class CartController : Controller
     {
         private readonly ICartService _cartService;
 
-        public CartController1(ICartService cartService)
+        public CartController(ICartService cartService)
         {
             _cartService = cartService;
         }
 
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> CartIndex()
         {
-            return View();
+            return View(await LoadCartDtoBasedOnLoggedInUser());
         }
 
         private async Task<CartDto> LoadCartDtoBasedOnLoggedInUser()
