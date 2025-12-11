@@ -21,6 +21,21 @@ namespace ECommerce.Frontend.Mvc.Controllers
             return View(await LoadCartDtoBasedOnLoggedInUser());
         }
 
+        public async Task<IActionResult> Remove(int cartDetailsId)
+        {
+            var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+            var response = await _cartService.RemoveFromCartAsync(cartDetailsId);
+            CartDto cartDto = new();
+
+            if (response != null && response.IsSuccess && response.Result != null)
+            {
+                TempData["success"] = "Cart updated successfully";
+                return RedirectToAction(nameof(CartIndex));
+            }
+
+            return View();
+        }
+
         private async Task<CartDto> LoadCartDtoBasedOnLoggedInUser()
         {
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
