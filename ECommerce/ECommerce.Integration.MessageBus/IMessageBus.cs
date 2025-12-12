@@ -2,6 +2,6 @@
 {
     public interface IMessageBus
     {
-        Task PublishMessageAsync<T>(T message, string topic_queue_Name);
+        Task PublishMessageAsync<T>(string connectionString, T message, string topic_queue_Name);
     }
 }
