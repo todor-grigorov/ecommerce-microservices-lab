@@ -61,5 +61,15 @@ namespace ECommerce.Frontend.Mvc.Service
                 Url = StaticDetails.ShoppingCartApiBase + "/api/cart/RemoveCart"
             });
         }
+
+        public async Task<ResponseDto?> EmailCartAsync(CartDto cartDto)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = StaticDetails.ApiType.POST,
+                Data = cartDto,
+                Url = StaticDetails.ShoppingCartApiBase + "/api/cart/EmailCartRequest"
+            });
+        }
     }
 }
