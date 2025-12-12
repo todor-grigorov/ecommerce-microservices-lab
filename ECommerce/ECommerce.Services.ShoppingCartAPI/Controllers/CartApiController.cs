@@ -17,13 +17,18 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
         private readonly AppDbContext _dbContext;
         private readonly IProductService _productService;
         private readonly ICouponService _couponService;
+        private readonly IServiceBus _serviceBus;
+        private readonly IConfiguration _configuration;
 
-        public CartApiController(AppDbContext dbContext, IProductService productService, ICouponService couponService, IMapper mapper)
+        public CartApiController(AppDbContext dbContext, IProductService productService, ICouponService couponService, IServiceBus serviceBus, IMapper mapper, IConfiguration configuration)
         {
             _dbContext = dbContext;
             _productService = productService;
             _couponService = couponService;
+            _serviceBus = serviceBus;
+            _serviceBus = serviceBus;
             _mapper = mapper;
+            _configuration = configuration;
             _responseDto = new ResponseDto();
         }
 
@@ -134,7 +139,7 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("CartUpsert")]
-        public async Task<ResponseDto> CartUpsert(CartDto cartDto)
+        public async Task<ResponseDto> CartUpsert([FromBody] CartDto cartDto)
         {
             try
             {
@@ -205,6 +210,24 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
                 }
 
                 await _dbContext.SaveChangesAsync();
+                _responseDto.Result = true;
+            }
+            catch (Exception ex)
+            {
+                _responseDto.IsSuccess = false;
+                _responseDto.Message = ex.Message.ToString();
+            }
+
+            return _responseDto;
+
+        }
+
+        [HttpPost("EmailCartRequest")]
+        public async Task<ResponseDto> EmailCartRequest([FromBody] CartDto cartDto)
+        {
+            try
+            {
+                await _serviceBus.PublishMessageAsync(cartDto, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue"));
                 _responseDto.Result = true;
             }
             catch (Exception ex)
