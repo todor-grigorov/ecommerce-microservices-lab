@@ -1,3 +1,4 @@
+using ECommerce.Integration.MessageBus;
 using ECommerce.Services.ShoppingCartAPI.Data;
 using ECommerce.Services.ShoppingCartAPI.Extensions;
 using ECommerce.Services.ShoppingCartAPI.Service;
@@ -19,6 +20,23 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
 builder.Services.AddScoped<ICouponService, CouponService>();
+builder.Services.AddScoped<IMessageBus, MessageBus>();
+
+builder.Services.AddScoped<IServiceBus, ServiceBus>(sp =>
+{
+    var connectionString = configuration.GetConnectionString("ServiceBus");
+
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        throw new InvalidOperationException(
+            "ServiceBus connection string is not configured. " +
+            "Set 'ConnectionStrings:ServiceBus' via user secrets or configuration.");
+    }
+
+    var messageBus = sp.GetRequiredService<IMessageBus>();
+
+    return new ServiceBus(connectionString, messageBus);
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
