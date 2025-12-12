@@ -65,6 +65,20 @@ namespace ECommerce.Frontend.Mvc.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EmailCart(CartDto cartDto)
+        {
+            var response = await _cartService.EmailCartAsync(cartDto);
+
+            if (response != null && response.IsSuccess && response.Result != null)
+            {
+                TempData["success"] = "Email will be processed and sent shortly.";
+                return RedirectToAction(nameof(CartIndex));
+            }
+
+            return View();
+        }
+
         private async Task<CartDto> LoadCartDtoBasedOnLoggedInUser()
         {
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
