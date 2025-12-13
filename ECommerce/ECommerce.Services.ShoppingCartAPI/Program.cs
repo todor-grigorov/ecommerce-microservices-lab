@@ -24,7 +24,7 @@ builder.Services.AddScoped<IMessageBus, MessageBus>();
 
 builder.Services.AddScoped<IServiceBus, ServiceBus>(sp =>
 {
-    var connectionString = configuration.GetConnectionString("ServiceBus");
+    var connectionString = configuration.GetConnectionString("ServiceBusConnection");
 
     if (string.IsNullOrWhiteSpace(connectionString))
     {
