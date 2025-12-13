@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.Services.EmailAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251213201925_AddEmailLogTable")]
+    [Migration("20251213215532_AddEmailLogTable")]
     partial class AddEmailLogTable
     {
         /// <inheritdoc />
@@ -46,7 +46,7 @@ namespace ECommerce.Services.EmailAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("EmailLoggers");
                 });
 #pragma warning restore 612, 618
         }

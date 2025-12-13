@@ -13,7 +13,7 @@ namespace ECommerce.Services.EmailAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "EmailLoggers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -24,7 +24,7 @@ namespace ECommerce.Services.EmailAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_EmailLoggers", x => x.Id);
                 });
         }
 
@@ -32,7 +32,7 @@ namespace ECommerce.Services.EmailAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "EmailLoggers");
         }
     }
 }

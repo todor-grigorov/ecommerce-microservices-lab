@@ -43,7 +43,7 @@ namespace ECommerce.Services.EmailAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("EmailLoggers");
                 });
 #pragma warning restore 612, 618
         }
