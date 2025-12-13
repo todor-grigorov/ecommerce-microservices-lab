@@ -4,10 +4,23 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>415db812-76b7-47bb-b105-095e9db49765</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	  <PackageReference Include="AutoMapper" Version="15.1.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.22" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.22" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
