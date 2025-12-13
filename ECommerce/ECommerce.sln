@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.Shopping
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Integration.MessageBus", "ECommerce.Integration.MessageBus\ECommerce.Integration.MessageBus.csproj", "{8487DF72-C0C6-47EB-9A33-C49AC0CBDD39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.Services.EmailAPI", "ECommerce.Services.EmailAPI\ECommerce.Services.EmailAPI.csproj", "{CC8AA264-6631-4019-89A9-02D7C7A7D806}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{8487DF72-C0C6-47EB-9A33-C49AC0CBDD39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8487DF72-C0C6-47EB-9A33-C49AC0CBDD39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8487DF72-C0C6-47EB-9A33-C49AC0CBDD39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC8AA264-6631-4019-89A9-02D7C7A7D806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC8AA264-6631-4019-89A9-02D7C7A7D806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC8AA264-6631-4019-89A9-02D7C7A7D806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC8AA264-6631-4019-89A9-02D7C7A7D806}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +70,7 @@ Global
 		{A5940600-473F-42D2-8CB2-58D09A2AE173} = {CDD1E6F8-8EE5-434D-9257-D8745CB9BCF7}
 		{EF7BED24-0A11-4A03-9FC4-E3F4208B93AA} = {CDD1E6F8-8EE5-434D-9257-D8745CB9BCF7}
 		{8487DF72-C0C6-47EB-9A33-C49AC0CBDD39} = {7A7DA156-F615-4FE7-8A40-D6E2A6D94C10}
+		{CC8AA264-6631-4019-89A9-02D7C7A7D806} = {CDD1E6F8-8EE5-434D-9257-D8745CB9BCF7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {02FDD593-9890-402B-B949-28FFD2716836}
