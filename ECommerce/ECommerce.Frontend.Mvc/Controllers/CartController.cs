@@ -66,9 +66,13 @@ namespace ECommerce.Frontend.Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EmailCart(CartDto cartDto)
+        public async Task<IActionResult> EmailCart()
         {
-            var response = await _cartService.EmailCartAsync(cartDto);
+            CartDto cart = await LoadCartDtoBasedOnLoggedInUser();
+            cart.CartHeader.Email = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Email)?.FirstOrDefault()?.Value;
+
+
+            var response = await _cartService.EmailCartAsync(cart);
 
             if (response != null && response.IsSuccess && response.Result != null)
             {
