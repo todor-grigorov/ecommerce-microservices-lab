@@ -1,4 +1,6 @@
 using ECommerce.Services.EmailAPI.Data;
+using ECommerce.Services.EmailAPI.Extensions;
+using ECommerce.Services.EmailAPI.Messaging;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,7 @@ builder.Services.AddDbContext<AppDbContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("postgresConnection")));
 
 // Add services to the container.
+builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,6 +35,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 ApplyMigrations(app);
+app.UseAzureServiceBusConsumer();
 
 app.Run();
 
