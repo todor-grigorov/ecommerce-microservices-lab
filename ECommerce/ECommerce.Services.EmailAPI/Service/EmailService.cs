@@ -33,6 +33,14 @@ namespace ECommerce.Services.EmailAPI.Service
             await LogAndEmail(emailBody.ToString(), cartDto.CartHeader.Email);
         }
 
+        public async Task RegisterUserEmailAndLog(string email)
+        {
+            StringBuilder emailBody = new StringBuilder();
+            emailBody.AppendFormat("<h3>Welcome to Our E-Commerce Platform {0}!</h3>", email);
+            emailBody.AppendLine("<br/>Thank you for registering with us. We're excited to have you on board!");
+            await LogAndEmail(emailBody.ToString(), email);
+        }
+
         private async Task<bool> LogAndEmail(string message, string email)
         {
             try
