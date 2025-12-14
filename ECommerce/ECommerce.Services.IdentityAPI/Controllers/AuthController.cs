@@ -1,7 +1,6 @@
 ﻿using ECommerce.Services.CouponAPI.Dto;
 using ECommerce.Services.IdentityAPI.Dto;
 using ECommerce.Services.IdentityAPI.Service.IService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.Services.IdentityAPI.Controllers
@@ -10,32 +9,54 @@ namespace ECommerce.Services.IdentityAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
         private readonly IAuthService _authService;
+        private readonly IServiceBus _serviceBus;
+        private readonly string? _registerUserQueue;
         protected ResponseDto _response;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IConfiguration configuration, IAuthService authService, IServiceBus serviceBus)
         {
+            _configuration = configuration;
             _authService = authService;
+            _serviceBus = serviceBus;
             _response = new ResponseDto();
+            _registerUserQueue = configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue");
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequestDto dto)
         {
-            var errorMessages = await _authService.Register(dto);
-
-            if (!string.IsNullOrEmpty(errorMessages))
+            if (string.IsNullOrEmpty(_registerUserQueue))
             {
                 _response.IsSuccess = false;
-                _response.Message = errorMessages;
+                _response.Message = "Service Bus queue/topic name is not configured.";
                 return BadRequest(_response);
             }
-            else
+
+            try
             {
+                var errorMessages = await _authService.Register(dto);
+
+                if (!string.IsNullOrEmpty(errorMessages))
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = errorMessages;
+                    return BadRequest(_response);
+                }
+
                 _response.Message = "User registered successfully.";
+                await _serviceBus.PublishMessageAsync(dto.Email, _registerUserQueue);
+
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return BadRequest(_response);
             }
 
-            return Ok(_response);
         }
 
         [HttpPost("login")]
