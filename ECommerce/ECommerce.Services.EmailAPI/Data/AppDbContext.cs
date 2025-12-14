@@ -8,7 +8,7 @@ namespace ECommerce.Services.EmailAPI.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
-        public DbSet<EmailLogger> Products { get; set; }
+        public DbSet<EmailLogger> EmailLoggers { get; set; }
 
     }
 }
