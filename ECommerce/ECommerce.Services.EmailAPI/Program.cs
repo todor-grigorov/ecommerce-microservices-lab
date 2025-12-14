@@ -1,6 +1,8 @@
 using ECommerce.Services.EmailAPI.Data;
 using ECommerce.Services.EmailAPI.Extensions;
 using ECommerce.Services.EmailAPI.Messaging;
+using ECommerce.Services.EmailAPI.Service;
+using ECommerce.Services.EmailAPI.Service.IService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,9 @@ var configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("postgresConnection")));
+var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+optionsBuilder.UseNpgsql(configuration.GetConnectionString("postgresConnection"));
+builder.Services.AddSingleton<IEmailService>(new EmailService(optionsBuilder.Options));
 
 // Add services to the container.
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
