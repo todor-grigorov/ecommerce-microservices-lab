@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>87647f58-51cd-48b8-8fd3-955a3e9affe1</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,10 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ECommerce.Integration.MessageBus\ECommerce.Integration.MessageBus.csproj" />
   </ItemGroup>
 
 </Project>
