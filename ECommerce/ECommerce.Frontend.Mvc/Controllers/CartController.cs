@@ -1,5 +1,6 @@
 ﻿using ECommerce.Frontend.Mvc.Dto;
 using ECommerce.Frontend.Mvc.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,8 +16,14 @@ namespace ECommerce.Frontend.Mvc.Controllers
             _cartService = cartService;
         }
 
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> CartIndex()
+        {
+            return View(await LoadCartDtoBasedOnLoggedInUser());
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Checkout()
         {
             return View(await LoadCartDtoBasedOnLoggedInUser());
         }
