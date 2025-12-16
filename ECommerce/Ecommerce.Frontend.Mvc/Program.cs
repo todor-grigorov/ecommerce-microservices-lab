@@ -22,6 +22,7 @@ namespace ECommerce.Frontend.Mvc
             StaticDetails.IdentityApiBase = builder.Configuration["ServiceUrls:IdentityApi"];
             StaticDetails.ProductApiBase = builder.Configuration["ServiceUrls:ProductApi"];
             StaticDetails.ShoppingCartApiBase = builder.Configuration["ServiceUrls:ShoppingCartApi"];
+            StaticDetails.OrderApiBase = builder.Configuration["ServiceUrls:OrderApi"];
 
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
             builder.Services.AddScoped<IBaseService, BaseService>();

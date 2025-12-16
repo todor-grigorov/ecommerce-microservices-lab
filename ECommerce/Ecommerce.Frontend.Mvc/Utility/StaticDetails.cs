@@ -6,6 +6,7 @@
         public static string IdentityApiBase { get; set; }
         public static string ProductApiBase { get; set; }
         public static string ShoppingCartApiBase { get; set; }
+        public static string OrderApiBase { get; set; }
 
         public const string RoleAdmin = "ADMIN";
         public const string RoleCustomer = "CUSTOMER";
