@@ -1,5 +1,6 @@
 ﻿using ECommerce.Frontend.Mvc.Dto;
 using ECommerce.Frontend.Mvc.Service.IService;
+using ECommerceFrontend.Mvc.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -10,10 +11,12 @@ namespace ECommerce.Frontend.Mvc.Controllers
     public class CartController : Controller
     {
         private readonly ICartService _cartService;
+        private readonly IOrderService _orderService;
 
-        public CartController(ICartService cartService)
+        public CartController(ICartService cartService, IOrderService orderService)
         {
             _cartService = cartService;
+            _orderService = orderService;
         }
 
         [Authorize]
@@ -26,6 +29,29 @@ namespace ECommerce.Frontend.Mvc.Controllers
         public async Task<IActionResult> Checkout()
         {
             return View(await LoadCartDtoBasedOnLoggedInUser());
+        }
+
+        [HttpPost]
+        [ActionName("Checkout")]
+        public async Task<IActionResult> Checkout(CartDto cartDto)
+        {
+            CartDto cart = await LoadCartDtoBasedOnLoggedInUser();
+            cart.CartHeader.Phone = cartDto.CartHeader.Phone;
+            cart.CartHeader.Email = cartDto.CartHeader.Email;
+            cart.CartHeader.Name = cartDto.CartHeader.Name;
+
+            var response = await _orderService.CreateOrderAsync(cart);
+            OrderHeaderDto orderHeaderDto = JsonConvert.DeserializeObject<OrderHeaderDto>(Convert.ToString(response.Result))!;
+
+            if (response != null && response.IsSuccess && response.Result != null)
+            {
+                // Get Stripe session and redirect to stripe to place order
+
+                //await _cartService.ClearCartAsync(cart.CartHeader.UserId);
+                //return RedirectToAction("OrderConfirmation", "Order", new { orderId = Convert.ToInt32(response.Result) });
+            }
+
+            return View(cart);
         }
 
         public async Task<IActionResult> Remove(int cartDetailsId)
