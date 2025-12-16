@@ -17,6 +17,7 @@ namespace ECommerce.Frontend.Mvc
             builder.Services.AddHttpClient<IAuthService, AuthService>();
             builder.Services.AddHttpClient<IProductService, ProductService>();
             builder.Services.AddHttpClient<ICartService, CartService>();
+            builder.Services.AddHttpClient<IOrderService, OrderService>();
 
             StaticDetails.CouponApiBase = builder.Configuration["ServiceUrls:CouponApi"];
             StaticDetails.IdentityApiBase = builder.Configuration["ServiceUrls:IdentityApi"];
@@ -30,6 +31,7 @@ namespace ECommerce.Frontend.Mvc
             builder.Services.AddScoped<ICouponService, CouponService>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
