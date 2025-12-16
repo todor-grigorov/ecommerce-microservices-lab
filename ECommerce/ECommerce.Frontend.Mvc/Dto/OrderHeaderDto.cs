@@ -1,6 +1,4 @@
-﻿using ECommerce.Frontend.Mvc.Dto;
-
-namespace ECommerceFrontend.Mvc.Dto
+﻿namespace ECommerce.Frontend.Mvc.Dto
 {
     public class OrderHeaderDto
     {
