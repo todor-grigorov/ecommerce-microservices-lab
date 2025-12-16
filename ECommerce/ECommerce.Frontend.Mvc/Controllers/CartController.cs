@@ -1,6 +1,5 @@
 ﻿using ECommerce.Frontend.Mvc.Dto;
 using ECommerce.Frontend.Mvc.Service.IService;
-using ECommerceFrontend.Mvc.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -52,6 +51,11 @@ namespace ECommerce.Frontend.Mvc.Controllers
             }
 
             return View(cart);
+        }
+
+        public async Task<IActionResult> Confirmation(int orderId)
+        {
+            return View(orderId);
         }
 
         public async Task<IActionResult> Remove(int cartDetailsId)
