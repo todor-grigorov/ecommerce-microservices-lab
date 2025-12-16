@@ -1,6 +1,4 @@
-﻿using ECommerce.Services.OrderAPI.Models;
-
-namespace ECommerce.Services.OrderAPI.Dto
+﻿namespace ECommerce.Services.OrderAPI.Dto
 {
     public class OrderHeaderDto
     {
@@ -16,6 +14,6 @@ namespace ECommerce.Services.OrderAPI.Dto
         public string? Status { get; set; }
         public string? PaymentIntentId { get; set; }
         public string? StripeSessionId { get; set; }
-        public IEnumerable<OrderDetails> OrderDetails { get; set; }
+        public IEnumerable<OrderDetailsDto> OrderDetails { get; set; }
     }
 }
