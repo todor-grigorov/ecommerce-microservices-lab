@@ -11,5 +11,7 @@
 
         public const string RoleAdmin = "ADMIN";
         public const string RoleCustomer = "CUSTOMER";
+
+        public static string? StripeSecretKey { get; set; }
     }
 }
