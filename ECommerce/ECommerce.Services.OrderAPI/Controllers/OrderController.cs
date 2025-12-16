@@ -17,13 +17,15 @@ namespace ECommerce.Services.OrderAPI.Controllers
         private IMapper _mapper;
         private readonly AppDbContext _dbContext;
         private readonly IProductService _productService;
+        private readonly IStripeService _stripeService;
 
-        public OrderController(AppDbContext dbContext, IMapper mapper, IProductService productService)
+        public OrderController(AppDbContext dbContext, IMapper mapper, IProductService productService, IStripeService stripeService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _productService = productService;
             _response = new ResponseDto();
+            _stripeService = stripeService;
         }
 
 
@@ -52,6 +54,29 @@ namespace ECommerce.Services.OrderAPI.Controllers
             }
 
             return _response.IsSuccess ? Ok(_response) : BadRequest(_response);
+        }
+
+        [Authorize]
+        [HttpPost("CreateStripeSession")]
+        public async Task<ResponseDto> CreateStripeSession([FromBody] StripeRequestDto stripeRequestDto)
+        {
+            try
+            {
+                var stripeSession = _stripeService.CreateStripeSession(stripeRequestDto);
+                stripeRequestDto.StripeSessionUrl = stripeSession.Url;
+
+                OrderHeader orderHeader = await _dbContext.OrderHeaders.FindAsync(stripeRequestDto.OrderHeader.OrderHeaderId);
+                orderHeader.StripeSessionId = stripeSession.Id;
+                await _dbContext.SaveChangesAsync();
+
+                _response.Result = stripeRequestDto;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
         }
     }
 }

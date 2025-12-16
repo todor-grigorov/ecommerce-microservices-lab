@@ -15,7 +15,7 @@ namespace ECommerce.Services.OrderAPI.Service
             {
                 StripeConfiguration.ApiKey = StaticDetails.StripeSecretKey;
 
-                var options = new Stripe.Checkout.SessionCreateOptions
+                var options = new SessionCreateOptions
                 {
                     SuccessUrl = stripeRequestDto.ApprovedUrl,
                     CancelUrl = stripeRequestDto.CancelUrl,
