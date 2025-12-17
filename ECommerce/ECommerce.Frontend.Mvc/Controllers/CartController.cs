@@ -1,5 +1,6 @@
 ﻿using ECommerce.Frontend.Mvc.Dto;
 using ECommerce.Frontend.Mvc.Service.IService;
+using ECommerce.Frontend.Mvc.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -66,7 +67,25 @@ namespace ECommerce.Frontend.Mvc.Controllers
 
         public async Task<IActionResult> Confirmation(int orderId)
         {
-            return View(orderId);
+            var response = await _orderService.ValidateStripeSession(orderId);
+
+            if (response != null && response.IsSuccess && response.Result != null)
+            {
+                OrderHeaderDto orderHeaderDto = JsonConvert.DeserializeObject<OrderHeaderDto>(Convert.ToString(response.Result))!;
+                if (orderHeaderDto.Status == StaticDetails.Status_Approved)
+                {
+                    //TODO: Clear the cart
+                    //var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+                    //await _cartService.ClearCartAsync(userId);
+
+                    return View(orderId);
+                }
+                TempData["success"] = "Cart updated successfully";
+                return RedirectToAction(nameof(CartIndex));
+            }
+
+            // TODO: maybe redirect to an error page
+            return View();
         }
 
         public async Task<IActionResult> Remove(int cartDetailsId)
