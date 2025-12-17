@@ -22,5 +22,15 @@ namespace ECommerce.Frontend.Mvc.Service
                 Url = StaticDetails.OrderApiBase + "/api/order/CreateOrder"
             });
         }
+
+        public async Task<ResponseDto?> CreateStripeSession(StripeRequestDto stripeRequestDto)
+        {
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = StaticDetails.ApiType.POST,
+                Data = stripeRequestDto,
+                Url = StaticDetails.OrderApiBase + "/api/order/CreateStripeSession"
+            });
+        }
     }
 }
