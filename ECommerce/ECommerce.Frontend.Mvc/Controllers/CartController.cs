@@ -44,10 +44,21 @@ namespace ECommerce.Frontend.Mvc.Controllers
 
             if (response != null && response.IsSuccess && response.Result != null)
             {
-                // Get Stripe session and redirect to stripe to place order
+                var domain = Request.Scheme + "://" + Request.Host.Value + "/";
 
-                //await _cartService.ClearCartAsync(cart.CartHeader.UserId);
-                //return RedirectToAction("OrderConfirmation", "Order", new { orderId = Convert.ToInt32(response.Result) });
+                StripeRequestDto stripeRequestDto = new()
+                {
+                    ApprovedUrl = domain + $"cart/confirmation?orderId={orderHeaderDto.OrderHeaderId}",
+                    CancelUrl = Url.Action("Checkout", "Cart", null, Request.Scheme)!,
+                    OrderHeader = orderHeaderDto,
+                };
+
+                var stripeResponse = await _orderService.CreateStripeSession(stripeRequestDto);
+                StripeRequestDto stripeResponseDeserialized = JsonConvert.DeserializeObject<StripeRequestDto>(Convert.ToString(stripeResponse.Result))!;
+
+                Response.Headers.Add("Location", stripeResponseDeserialized.StripeSessionUrl);
+
+                return new StatusCodeResult(303);
             }
 
             return View(cart);
