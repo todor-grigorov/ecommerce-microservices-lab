@@ -78,5 +78,31 @@ namespace ECommerce.Services.OrderAPI.Controllers
             }
             return _response;
         }
+
+        [Authorize]
+        [HttpPost("ValidateStripeSession")]
+        public async Task<ResponseDto> ValidateStripeSession([FromBody] int orderHeaderId)
+        {
+            try
+            {
+                OrderHeader orderHeader = await _dbContext.OrderHeaders.FindAsync(orderHeaderId);
+                var paymentIntent = _stripeService.GetPaymentIntent(orderHeader.StripeSessionId);
+
+                if (paymentIntent.Status.ToLower() == "succeeded")
+                {
+                    orderHeader.Status = StaticDetails.Status_Approved;
+                    orderHeader.PaymentIntentId = paymentIntent.Id;
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
     }
 }
