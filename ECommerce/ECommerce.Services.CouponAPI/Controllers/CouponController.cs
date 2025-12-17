@@ -2,6 +2,7 @@
 using ECommerce.Services.CouponAPI.Data;
 using ECommerce.Services.CouponAPI.Dto;
 using ECommerce.Services.CouponAPI.Models;
+using ECommerce.Services.CouponAPI.Services.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,12 +15,14 @@ namespace ECommerce.Services.CouponAPI.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IStripeService _stripeService;
         private ResponseDto _response;
 
-        public CouponController(AppDbContext context, IMapper mapper)
+        public CouponController(AppDbContext context, IMapper mapper, IStripeService stripeService)
         {
             _context = context;
             _mapper = mapper;
+            _stripeService = stripeService;
             _response = new ResponseDto();
         }
 
@@ -93,6 +96,12 @@ namespace ECommerce.Services.CouponAPI.Controllers
                 _context.Coupons.Add(coupon);
                 _context.SaveChanges();
 
+                var stripeCoupon = _stripeService.CreateCoupon(
+                    Convert.ToInt64(couponDto.DiscountAmount * 100),
+                    couponDto.CouponCode,
+                    "usd",
+                    couponDto.CouponCode).GetAwaiter().GetResult();
+
                 _response.Result = _mapper.Map<CouponDto>(coupon);
             }
             catch (Exception ex)
@@ -137,6 +146,8 @@ namespace ECommerce.Services.CouponAPI.Controllers
                 var coupon = _context.Coupons.First(c => c.CouponId == id);
                 _context.Coupons.Remove(coupon);
                 _context.SaveChanges();
+
+                var stripeDeleted = _stripeService.DeleteCoupon(coupon.CouponCode).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
