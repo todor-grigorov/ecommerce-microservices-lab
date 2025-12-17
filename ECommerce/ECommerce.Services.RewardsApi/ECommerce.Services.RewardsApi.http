@@ -1,0 +1,6 @@
+@ECommerce.Services.RewardsApi_HostAddress = http://localhost:5084
+
+GET {{ECommerce.Services.RewardsApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
