@@ -1,4 +1,5 @@
 ﻿using ECommerce.Services.OrderAPI.Dto;
+using Stripe;
 using Stripe.Checkout;
 
 namespace ECommerce.Services.OrderAPI.Service.IService
@@ -6,5 +7,7 @@ namespace ECommerce.Services.OrderAPI.Service.IService
     public interface IStripeService
     {
         Session? CreateStripeSession(StripeRequestDto stripeRequestDto);
+        PaymentIntent? GetPaymentIntent(string sessionId);
+
     }
 }
