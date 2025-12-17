@@ -1,5 +1,8 @@
 using ECommerce.Services.CouponAPI.Data;
 using ECommerce.Services.CouponAPI.Extensions;
+using ECommerce.Services.CouponAPI.Services;
+using ECommerce.Services.CouponAPI.Services.IService;
+using ECommerce.Services.CouponAPI.Utility;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +13,11 @@ var configuration = builder.Configuration;
 builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
 builder.Services.AddDbContext<AppDbContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("postgresConnection")));
+
+StaticDetails.StripeSecretKey = configuration.GetSection("StripeSettings:SecretKey").Get<string>();
+
+builder.Services.AddScoped<IStripeService, StripeService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
