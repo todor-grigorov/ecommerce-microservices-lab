@@ -10,7 +10,6 @@ namespace ECommerce.Services.OrderAPI.Service
     {
         public Session? CreateStripeSession(StripeRequestDto stripeRequestDto)
         {
-            Session session;
             try
             {
                 StripeConfiguration.ApiKey = StaticDetails.StripeSecretKey;
@@ -22,6 +21,14 @@ namespace ECommerce.Services.OrderAPI.Service
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
                 };
+
+                var discounts = new List<SessionDiscountOptions>() {
+                    new SessionDiscountOptions
+                    {
+                        Coupon = stripeRequestDto.OrderHeader.CouponCode
+                    }
+                };
+
 
                 foreach (var item in stripeRequestDto.OrderHeader.OrderDetails)
                 {
@@ -41,16 +48,39 @@ namespace ECommerce.Services.OrderAPI.Service
                     options.LineItems.Add(lineItem);
                 }
 
+                if (stripeRequestDto.OrderHeader.Discount > 0)
+                {
+                    options.Discounts = discounts;
+                }
 
                 var service = new SessionService();
-                session = service.Create(options);
+                Session session = service.Create(options);
+
+                return session;
             }
             catch (Exception)
             {
                 throw;
             }
+        }
 
-            return session;
+        public PaymentIntent? GetPaymentIntent(string sessionId)
+        {
+            try
+            {
+                StripeConfiguration.ApiKey = StaticDetails.StripeSecretKey;
+                var service = new SessionService();
+                Session session = service.Get(sessionId);
+
+                PaymentIntent paymentIntent = new PaymentIntentService().Get(session.PaymentIntentId);
+
+                return paymentIntent;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
