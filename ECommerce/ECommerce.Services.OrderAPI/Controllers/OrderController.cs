@@ -16,16 +16,20 @@ namespace ECommerce.Services.OrderAPI.Controllers
         protected ResponseDto _response;
         private IMapper _mapper;
         private readonly AppDbContext _dbContext;
+        private readonly IConfiguration _configuration;
         private readonly IProductService _productService;
         private readonly IStripeService _stripeService;
+        private readonly IServiceBus _bus;
 
-        public OrderController(AppDbContext dbContext, IMapper mapper, IProductService productService, IStripeService stripeService)
+        public OrderController(AppDbContext dbContext, IConfiguration configuration, IMapper mapper, IProductService productService, IStripeService stripeService, IServiceBus bus)
         {
             _dbContext = dbContext;
+            _configuration = configuration;
             _mapper = mapper;
             _productService = productService;
             _response = new ResponseDto();
             _stripeService = stripeService;
+            _bus = bus;
         }
 
 
@@ -93,6 +97,16 @@ namespace ECommerce.Services.OrderAPI.Controllers
                     orderHeader.Status = StaticDetails.Status_Approved;
                     orderHeader.PaymentIntentId = paymentIntent.Id;
                     await _dbContext.SaveChangesAsync();
+
+                    RewardsDto rewardsDto = new()
+                    {
+                        UserId = orderHeader.UserId,
+                        RewardsActivity = Convert.ToInt32(orderHeader.OrderTotal),
+                        OrderId = orderHeader.OrderHeaderId
+                    };
+
+                    var topicName = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic");
+                    await _bus.PublishMessageAsync(rewardsDto, topicName);
                 }
 
                 _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
