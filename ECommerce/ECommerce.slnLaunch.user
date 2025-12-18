@@ -29,6 +29,10 @@
       {
         "Path": "ECommerce.Services.OrderAPI\\ECommerce.Services.OrderAPI.csproj",
         "Action": "Start"
+      },
+      {
+        "Path": "ECommerce.Services.RewardsApi\\ECommerce.Services.RewardsApi.csproj",
+        "Action": "Start"
       }
     ]
   }
