@@ -1,16 +1,21 @@
+using ECommerce.Services.EmailAPI.Service;
+using ECommerce.Services.EmailAPI.Service.IService;
 using ECommerce.Services.RewardsApi.Data;
+using ECommerce.Services.RewardsApi.Messaging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 
-// Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("postgresConnection")));
 var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+// Add services to the container.
+
+builder.Services.AddSingleton<IRewardsService>(new RewardsService(optionsBuilder.Options));
+builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
