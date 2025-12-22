@@ -6,5 +6,6 @@ namespace ECommerce.Services.EmailAPI.Service.IService
     {
         Task EmailCartAndLog(CartDto cartDto);
         Task RegisterUserEmailAndLog(string email);
+        Task LogOrderPlaced(RewardsMessageDto rewardsMessageDto);
     }
 }

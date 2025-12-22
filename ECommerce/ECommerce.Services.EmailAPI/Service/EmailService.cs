@@ -33,6 +33,14 @@ namespace ECommerce.Services.EmailAPI.Service
             await LogAndEmail(emailBody.ToString(), cartDto.CartHeader.Email);
         }
 
+        public Task LogOrderPlaced(RewardsMessageDto rewardsMessageDto)
+        {
+            string message = $"<h3>Order Placed Successfully!</h3><br/>" +
+                             $"<p>Your order with Order ID: {rewardsMessageDto.OrderId} has been placed successfully. " +
+                             $"You have earned {rewardsMessageDto.RewardsActivity} reward points.</p>";
+            return LogAndEmail(message, rewardsMessageDto.UserId);
+        }
+
         public async Task RegisterUserEmailAndLog(string email)
         {
             StringBuilder emailBody = new StringBuilder();
