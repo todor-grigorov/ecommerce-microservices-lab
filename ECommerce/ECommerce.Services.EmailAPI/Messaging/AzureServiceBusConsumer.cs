@@ -11,36 +11,45 @@ namespace ECommerce.Services.EmailAPI.Messaging
         private readonly string serviceBusConnectionString;
         private readonly string emailCartQueue;
         private readonly string registerUserQueue;
+        private readonly string orderCreatedTopic;
+        private readonly string orderCreatedEmailSubscription;
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
-        private ServiceBusProcessor _registerUserProcessor;
 
-        private readonly ServiceBusProcessor _emailCartProcessor;
+        private ServiceBusProcessor _emailOrderPlacedProcessor;
+        private ServiceBusProcessor _emailCartProcessor;
+        private ServiceBusProcessor _registerUserProcessor;
 
         public AzureServiceBusConsumer(IConfiguration configuration, IEmailService emailService)
         {
             _emailService = emailService;
             _configuration = configuration;
-            serviceBusConnectionString = configuration.GetConnectionString("ServiceBusConnection");
-            emailCartQueue = configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue");
-            registerUserQueue = configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue");
+            serviceBusConnectionString = _configuration.GetConnectionString("ServiceBusConnection");
+            emailCartQueue = _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue")!;
+            registerUserQueue = _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue")!;
+            orderCreatedTopic = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic")!;
+            orderCreatedEmailSubscription = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedEmail")!;
 
 
             var client = new ServiceBusClient(serviceBusConnectionString);
             _emailCartProcessor = client.CreateProcessor(emailCartQueue);
             _registerUserProcessor = client.CreateProcessor(registerUserQueue);
+            _emailOrderPlacedProcessor = client.CreateProcessor(orderCreatedTopic, orderCreatedEmailSubscription);
+
         }
 
         public async Task Start()
         {
             await StartEmailCartProcessor();
             await StartRegisterUserProcessor();
+            await StartEmailOrderPlacedProcessor();
 
         }
         public async Task Stop()
         {
             await StopEmailCartProcessor();
             await StopRegisterUserProcessor();
+            await StopEmailOrderPlacedProcessor();
         }
 
 
@@ -67,6 +76,38 @@ namespace ECommerce.Services.EmailAPI.Messaging
         {
             await _registerUserProcessor.StopProcessingAsync();
             await _registerUserProcessor.DisposeAsync();
+        }
+
+        private async Task StartEmailOrderPlacedProcessor()
+        {
+            _emailOrderPlacedProcessor.ProcessMessageAsync += OnOrderPlacedReceived;
+            _emailOrderPlacedProcessor.ProcessErrorAsync += ErrorHandler;
+            await _emailOrderPlacedProcessor.StartProcessingAsync();
+        }
+
+        private async Task OnOrderPlacedReceived(ProcessMessageEventArgs args)
+        {
+            var message = args.Message;
+            var body = Encoding.UTF8.GetString(message.Body);
+
+            RewardsMessageDto objMessage = JsonConvert.DeserializeObject<RewardsMessageDto>(body);
+
+            try
+            {
+                //TODO - try to log email
+                await _emailService.LogOrderPlaced(objMessage);
+                await args.CompleteMessageAsync(args.Message);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        private async Task StopEmailOrderPlacedProcessor()
+        {
+            await _emailOrderPlacedProcessor.StopProcessingAsync();
+            await _emailOrderPlacedProcessor.DisposeAsync();
         }
 
         private async Task OnRegisterUserReceived(ProcessMessageEventArgs args)
