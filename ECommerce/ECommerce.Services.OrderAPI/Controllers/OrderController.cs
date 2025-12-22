@@ -101,6 +101,7 @@ namespace ECommerce.Services.OrderAPI.Controllers
                     RewardsDto rewardsDto = new()
                     {
                         UserId = orderHeader.UserId,
+                        Email = orderHeader.Email,
                         RewardsActivity = Convert.ToInt32(orderHeader.OrderTotal),
                         OrderId = orderHeader.OrderHeaderId
                     };
