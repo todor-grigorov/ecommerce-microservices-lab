@@ -14,9 +14,9 @@ builder.Services.AddDbContext<AppDbContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("postgresConnection")));
 var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 optionsBuilder.UseNpgsql(configuration.GetConnectionString("postgresConnection"));
-builder.Services.AddSingleton<IEmailService>(new EmailService(optionsBuilder.Options));
 
 // Add services to the container.
+builder.Services.AddSingleton<IEmailService>(new EmailService(optionsBuilder.Options));
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
 
 builder.Services.AddControllers();
