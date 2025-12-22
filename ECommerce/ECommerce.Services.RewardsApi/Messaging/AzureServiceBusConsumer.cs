@@ -22,7 +22,7 @@ namespace ECommerce.Services.RewardsApi.Messaging
             _configuration = configuration;
             serviceBusConnectionString = _configuration.GetConnectionString("ServiceBusConnection") ?? throw new InvalidOperationException("ServiceBusConnection string is missing.");
             orderCreatedTopic = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic") ?? throw new InvalidOperationException("OrderCreatedTopic is missing.");
-            orderCreatedRewardsSubscription = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedRewardsUpdate") ?? throw new InvalidOperationException("OrderCreatedRewardsUpdate is missing.");
+            orderCreatedRewardsSubscription = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedRewardsSubscription") ?? throw new InvalidOperationException("OrderCreatedRewardsUpdate is missing.");
 
 
             var client = new ServiceBusClient(serviceBusConnectionString);
@@ -31,23 +31,23 @@ namespace ECommerce.Services.RewardsApi.Messaging
 
         public async Task Start()
         {
-            await StartEmailCartProcessor();
+            await StartRewardsProcessor();
 
         }
         public async Task Stop()
         {
-            await StopEmailCartProcessor();
+            await StopRewardsProcessor();
         }
 
 
-        private async Task StartEmailCartProcessor()
+        private async Task StartRewardsProcessor()
         {
             _rewardsProcessor.ProcessMessageAsync += OnNewOrderRewardsRequestReceived;
             _rewardsProcessor.ProcessErrorAsync += ErrorHandler;
             await _rewardsProcessor.StartProcessingAsync();
         }
 
-        private async Task StopEmailCartProcessor()
+        private async Task StopRewardsProcessor()
         {
             await _rewardsProcessor.StopProcessingAsync();
             await _rewardsProcessor.DisposeAsync();
