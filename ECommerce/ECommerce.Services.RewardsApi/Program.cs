@@ -1,6 +1,7 @@
 using ECommerce.Services.EmailAPI.Service;
 using ECommerce.Services.EmailAPI.Service.IService;
 using ECommerce.Services.RewardsApi.Data;
+using ECommerce.Services.RewardsApi.Extensions;
 using ECommerce.Services.RewardsApi.Messaging;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,7 @@ var configuration = builder.Configuration;
 builder.Services.AddDbContext<AppDbContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("postgresConnection")));
 var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+optionsBuilder.UseNpgsql(configuration.GetConnectionString("postgresConnection"));
 // Add services to the container.
 
 builder.Services.AddSingleton<IRewardsService>(new RewardsService(optionsBuilder.Options));
@@ -36,6 +38,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 ApplyMigrations(app);
+app.UseAzureServiceBusConsumer();
 
 app.Run();
 
