@@ -6,6 +6,7 @@ using ECommerce.Services.OrderAPI.Service.IService;
 using ECommerce.Services.OrderAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce.Services.OrderAPI.Controllers
 {
@@ -30,6 +31,60 @@ namespace ECommerce.Services.OrderAPI.Controllers
             _response = new ResponseDto();
             _stripeService = stripeService;
             _bus = bus;
+        }
+
+        [Authorize]
+        [HttpGet("GetOrders")]
+        public async Task<ResponseDto?> Get(string? userId)
+        {
+            try
+            {
+                IEnumerable<OrderHeader> orderHeaders;
+                if (User.IsInRole(StaticDetails.RoleAdmin))
+                {
+                    orderHeaders = _dbContext.OrderHeaders.Include(o => o.OrderDetails).OrderByDescending(o => o.OrderHeaderId);
+                }
+                else
+                {
+                    orderHeaders = _dbContext.OrderHeaders.Include(o => o.OrderDetails).Where(o => o.UserId == userId).OrderByDescending(o => o.OrderHeaderId);
+                }
+
+
+
+
+                _response.Result = _mapper.Map<IEnumerable<OrderHeaderDto>>(orderHeaders);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+        [Authorize]
+        [HttpGet("GetOrder/{orderId}")]
+        public async Task<ResponseDto> Get(int orderId)
+        {
+            try
+            {
+                OrderHeader? orderHeader = _dbContext.OrderHeaders.Include(o => o.OrderDetails).FirstOrDefault(o => o.OrderHeaderId == orderId);
+
+                if (orderHeader == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Order not found.";
+                }
+
+                OrderHeaderDto orderHeaderDto = _mapper.Map<OrderHeaderDto>(orderHeader);
+                _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
         }
 
 
