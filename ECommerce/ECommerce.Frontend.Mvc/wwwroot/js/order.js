@@ -18,7 +18,7 @@ function loadDataTable() {
                 orderable: false,
                 searchable: false,
                 render: function (data) {
-                    return `<div class="w-75 btn-group" role="group"><a class="btn btn-sm btn-primary mx-2" href="/order/details?id=${data}"><i class="bi bi-pencil-square"></i></a></div>`;
+                    return `<div class="w-75 btn-group" role="group"><a class="btn btn-sm btn-primary mx-2" href="/order/orderDetails?orderId=${data}"><i class="bi bi-pencil-square"></i></a></div>`;
                 }
             }
         ]

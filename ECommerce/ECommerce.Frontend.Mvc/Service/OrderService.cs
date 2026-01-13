@@ -38,7 +38,7 @@ namespace ECommerce.Frontend.Mvc.Service
             return await _baseService.SendAsync(new RequestDto()
             {
                 ApiType = StaticDetails.ApiType.GET,
-                Url = StaticDetails.OrderApiBase + "/api/order/GetOrders" + userId,
+                Url = StaticDetails.OrderApiBase + "/api/order/GetOrders/" + userId,
             });
         }
 
@@ -47,7 +47,7 @@ namespace ECommerce.Frontend.Mvc.Service
             return await _baseService.SendAsync(new RequestDto()
             {
                 ApiType = StaticDetails.ApiType.GET,
-                Url = StaticDetails.OrderApiBase + "/api/order/GetOrder",
+                Url = StaticDetails.OrderApiBase + "/api/order/GetOrder/" + orderId,
             });
         }
 
@@ -57,7 +57,7 @@ namespace ECommerce.Frontend.Mvc.Service
             {
                 ApiType = StaticDetails.ApiType.POST,
                 Data = status,
-                Url = StaticDetails.OrderApiBase + "/api/order/UpdateOrderStatus" + orderId,
+                Url = StaticDetails.OrderApiBase + "/api/order/UpdateOrderStatus/" + orderId,
             });
         }
 
