@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - ECommerce.Frontend.Mvc</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="//cdn.datatables.net/2.3.6/css/dataTables.dataTables.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ECommerce.Frontend.Mvc.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" />
@@ -39,6 +40,7 @@
                                 <li><hr class="dropdown-divider"></li>
                             </ul>
                         </li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Order" asp-action="OrderIndex">Manage Order</a></li>
                         <li class="nav-item"><a class="nav-link" asp-controller="Cart" asp-action="CartIndex">&nbsp; <i class="bi bi-cart"></i>&nbsp;</a></li>
                     </ul>
                     <ul class="navbar-nav">
@@ -78,6 +80,7 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
