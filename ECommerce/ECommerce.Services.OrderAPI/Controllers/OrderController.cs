@@ -7,6 +7,7 @@ using ECommerce.Services.OrderAPI.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 namespace ECommerce.Services.OrderAPI.Controllers
 {
@@ -172,6 +173,45 @@ namespace ECommerce.Services.OrderAPI.Controllers
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
             }
+            return _response;
+        }
+
+        [Authorize]
+        [HttpPut("UpdateOrderStatus/{orderId}")]
+        public async Task<ResponseDto> UpdateOrderStatus(int orderId, [FromBody] string status)
+        {
+            try
+            {
+                OrderHeader orderHeader = _dbContext.OrderHeaders.FirstOrDefault(o => o.OrderHeaderId == orderId);
+                if (orderHeader == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Order not found.";
+                    return _response;
+                }
+
+                if (status == StaticDetails.Status_Cancelled)
+                {
+                    var options = new RefundCreateOptions
+                    {
+                        Reason = RefundReasons.RequestedByCustomer,
+                        PaymentIntent = orderHeader.PaymentIntentId!
+                    };
+
+                    var service = new RefundService();
+                    Refund refund = service.Create(options);
+                }
+
+                orderHeader.Status = status;
+                _dbContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+
             return _response;
         }
     }
