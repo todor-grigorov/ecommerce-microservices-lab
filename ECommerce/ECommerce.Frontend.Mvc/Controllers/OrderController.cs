@@ -40,6 +40,48 @@ namespace ECommerce.Frontend.Mvc.Controllers
             return View(orderHeaderDto);
         }
 
+        [HttpPost("OrderReadyForPickup")]
+        public async Task<IActionResult> OrderReadyForPickup(int orderId)
+        {
+            var response = await _orderService.UpdateOrderStatus(orderId, StaticDetails.Status_ReadyForPickup);
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Order status updated successfully.";
+                return RedirectToAction(nameof(OrderDetails), new { orderId = orderId });
+            }
+
+            TempData["error"] = "An error occured while updating order status.";
+            return RedirectToAction(nameof(OrderDetails), new { orderId = orderId });
+        }
+
+        [HttpPost("CompleteOrder")]
+        public async Task<IActionResult> CompleteOrder(int orderId)
+        {
+            var response = await _orderService.UpdateOrderStatus(orderId, StaticDetails.Status_Completed);
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Order status updated successfully.";
+                return RedirectToAction(nameof(OrderDetails), new { orderId = orderId });
+            }
+
+            TempData["error"] = "An error occured while updating order status.";
+            return RedirectToAction(nameof(OrderDetails), new { orderId = orderId });
+        }
+
+        [HttpPost("CancelOrder")]
+        public async Task<IActionResult> CancelOrder(int orderId)
+        {
+            var response = await _orderService.UpdateOrderStatus(orderId, StaticDetails.Status_Cancelled);
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Order status updated successfully.";
+                return RedirectToAction(nameof(OrderDetails), new { orderId = orderId });
+            }
+
+            TempData["error"] = "An error occured while updating order status.";
+            return RedirectToAction(nameof(OrderDetails), new { orderId = orderId });
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {
