@@ -177,7 +177,7 @@ namespace ECommerce.Services.OrderAPI.Controllers
         }
 
         [Authorize]
-        [HttpPut("UpdateOrderStatus/{orderId}")]
+        [HttpPost("UpdateOrderStatus/{orderId}")]
         public async Task<ResponseDto> UpdateOrderStatus(int orderId, [FromBody] string status)
         {
             try
