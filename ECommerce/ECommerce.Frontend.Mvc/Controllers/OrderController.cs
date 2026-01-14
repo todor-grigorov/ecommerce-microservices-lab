@@ -83,7 +83,7 @@ namespace ECommerce.Frontend.Mvc.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll(string status)
         {
             IEnumerable<OrderHeaderDto>? list = new List<OrderHeaderDto>();
             string? userId = "";
@@ -98,6 +98,20 @@ namespace ECommerce.Frontend.Mvc.Controllers
             if (response != null && response.IsSuccess && response.Result != null)
             {
                 list = JsonConvert.DeserializeObject<List<OrderHeaderDto>>(Convert.ToString(response.Result));
+                switch (status)
+                {
+                    case "approved":
+                        list = list.Where(o => o.Status == StaticDetails.Status_Approved);
+                        break;
+                    case "readyforpickup":
+                        list = list.Where(o => o.Status == StaticDetails.Status_ReadyForPickup);
+                        break;
+                    case "cancelled":
+                        list = list.Where(o => o.Status == StaticDetails.Status_Cancelled);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             return Json(new { data = list });
