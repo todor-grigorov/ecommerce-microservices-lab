@@ -18,6 +18,9 @@ $(document).ready(function () {
     if (url.includes('all')) {
         loadDataTable('all');
     }
+    else {
+        loadDataTable('all');
+    }
 });
 
 function loadDataTable(status) {
