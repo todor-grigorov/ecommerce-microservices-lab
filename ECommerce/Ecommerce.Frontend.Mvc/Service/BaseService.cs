@@ -54,11 +54,16 @@ namespace ECommerce.Frontend.Mvc.Service
                             if (file != null)
                             {
                                 var fileContent = new StreamContent(file.OpenReadStream());
-                                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
                                 content.Add(fileContent, prop.Name, file.FileName);
                             }
                         }
+                        else
+                        {
+                            content.Add(new StringContent(value == null ? "" : value.ToString()!), prop.Name);
+                        }
                     }
+
+                    message.Content = content;
                 }
                 else
                 {
@@ -69,12 +74,12 @@ namespace ECommerce.Frontend.Mvc.Service
                 }
 
 
-                if (requestDto.Data != null)
-                {
-                    //message.Content = new StringContent(System.Text.Json.JsonSerializer.Serialize(requestDto.Data));
-                    message.Content = new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
-                    //message.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                }
+                //if (requestDto.Data != null)
+                //{
+                //    //message.Content = new StringContent(System.Text.Json.JsonSerializer.Serialize(requestDto.Data));
+                //    message.Content = new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
+                //    //message.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                //}
 
                 HttpResponseMessage? apiResponse = null;
 
