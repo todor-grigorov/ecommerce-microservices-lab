@@ -117,13 +117,36 @@ namespace ECommerce.Services.ProductAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public IActionResult CreateProduct([FromBody] ProductDto productDto)
+        public IActionResult CreateProduct(ProductDto productDto)
         {
             try
             {
                 var product = _mapper.Map<Models.Product>(productDto);
 
                 _dbContext.Products.Add(product);
+                _dbContext.SaveChanges();
+
+                if (productDto.Image != null)
+                {
+                    string fileName = product.ProductId + Path.GetExtension(productDto.Image.FileName);
+                    string filePath = @"wwwroot\ProductImages\" + fileName;
+                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+
+                    using (var stream = new FileStream(filePathDirectory, FileMode.Create))
+                    {
+                        productDto.Image.CopyTo(stream);
+                    }
+
+                    var baseUrl = $"{Request.Scheme}://{Request.Host.Value}{Request.PathBase.Value}";
+                    product.ImageUrl = baseUrl + "/ProductImages/" + fileName;
+                    product.ImageLocalPath = filePath;
+                }
+                else
+                {
+                    product.ImageUrl = "https://placehold.co/600x400";
+                }
+
+                _dbContext.Products.Update(product);
                 _dbContext.SaveChanges();
                 _response.Result = _mapper.Map<ProductDto>(product);
             }
