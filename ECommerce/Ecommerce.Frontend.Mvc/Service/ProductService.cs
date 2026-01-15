@@ -19,7 +19,8 @@ namespace ECommerce.Frontend.Mvc.Service
             {
                 ApiType = StaticDetails.ApiType.POST,
                 Data = productDto,
-                Url = StaticDetails.ProductApiBase + "/api/product"
+                Url = StaticDetails.ProductApiBase + "/api/product",
+                ContentType = StaticDetails.ContentType.MultipartFormData
             });
         }
 
@@ -56,7 +57,8 @@ namespace ECommerce.Frontend.Mvc.Service
             {
                 ApiType = StaticDetails.ApiType.PUT,
                 Data = productDto,
-                Url = StaticDetails.ProductApiBase + "/api/product"
+                Url = StaticDetails.ProductApiBase + "/api/product",
+                ContentType = StaticDetails.ContentType.MultipartFormData
             });
         }
     }
