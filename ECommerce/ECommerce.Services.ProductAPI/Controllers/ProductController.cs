@@ -185,6 +185,18 @@ namespace ECommerce.Services.ProductAPI.Controllers
             try
             {
                 var product = _dbContext.Products.First(p => p.ProductId == id);
+
+                if (!string.IsNullOrEmpty(product.ImageLocalPath))
+                {
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
+                    FileInfo file = new FileInfo(filePath);
+
+                    if (file.Exists)
+                    {
+                        file.Delete();
+                    }
+                }
+
                 _dbContext.Products.Remove(product);
                 _dbContext.SaveChanges();
             }
