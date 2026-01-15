@@ -21,11 +21,17 @@ namespace ECommerce.Frontend.Mvc.Service
         {
             try
             {
-
-
                 HttpClient client = _httpClientFactory.CreateClient("ECommerceAPI");
                 HttpRequestMessage message = new HttpRequestMessage();
-                message.Headers.Add("Accept", "application/json");
+                if (requestDto.ContentType == ContentType.MultipartFormData)
+                {
+                    message.Headers.Add("Accept", "*/*");
+                }
+                else
+                {
+                    message.Headers.Add("Accept", "application/json");
+                }
+
                 //token
                 if (withBearer)
                 {
@@ -34,6 +40,34 @@ namespace ECommerce.Frontend.Mvc.Service
                 }
 
                 message.RequestUri = new Uri(requestDto.Url);
+
+                if (requestDto.ContentType == ContentType.MultipartFormData)
+                {
+                    var content = new MultipartFormDataContent();
+
+                    foreach (var prop in requestDto.Data.GetType().GetProperties())
+                    {
+                        var value = prop.GetValue(requestDto.Data);
+                        if (value is FormFile)
+                        {
+                            var file = value as FormFile;
+                            if (file != null)
+                            {
+                                var fileContent = new StreamContent(file.OpenReadStream());
+                                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                                content.Add(fileContent, prop.Name, file.FileName);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (requestDto.Data != null)
+                    {
+                        message.Content = new StringContent(JsonConvert.SerializeObject(requestDto.Data), Encoding.UTF8, "application/json");
+                    }
+                }
+
 
                 if (requestDto.Data != null)
                 {
