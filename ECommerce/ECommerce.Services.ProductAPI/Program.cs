@@ -1,5 +1,7 @@
 using ECommerce.Services.ProdictAPI.Data;
 using ECommerce.Services.ProductAPI.Extensions;
+using ECommerce.Services.ProductAPI.Services;
+using ECommerce.Services.ProductAPI.Services.IService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,7 @@ var configuration = builder.Configuration;
 builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
 builder.Services.AddDbContext<AppDbContext>(opts =>
                 opts.UseNpgsql(configuration.GetConnectionString("postgresConnection")));
+builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
