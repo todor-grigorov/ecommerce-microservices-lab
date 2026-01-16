@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ECommerce.Frontend.Mvc.Utility;
+using System.ComponentModel.DataAnnotations;
 
 namespace ECommerce.Frontend.Mvc.Dto
 {
@@ -14,6 +15,9 @@ namespace ECommerce.Frontend.Mvc.Dto
 
         [Range(1, 100)]
         public int Count { get; set; } = 1;
+
+        [MaxFileSize(1)]
+        [AllowedExtensions(new string[] { ".jpg", ".png" })]
         public IFormFile? Image { get; set; }
     }
 }
