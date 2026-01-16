@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ECommerce.Services.ProdictAPI.Data;
 using ECommerce.Services.ProductAPI.Dto;
+using ECommerce.Services.ProductAPI.Services.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,12 @@ namespace ECommerce.Services.ProductAPI.Controllers
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
         private ResponseDto _response;
+        private readonly IProductService _productService;
 
-        public ProductController(AppDbContext dbContext, IMapper mapper)
+        public ProductController(AppDbContext dbContext, IProductService productService, IMapper mapper)
         {
             _dbContext = dbContext;
+            _productService = productService;
             _mapper = mapper;
             _response = new ResponseDto();
         }
@@ -128,18 +131,11 @@ namespace ECommerce.Services.ProductAPI.Controllers
 
                 if (productDto.Image != null)
                 {
-                    string fileName = product.ProductId + Path.GetExtension(productDto.Image.FileName);
-                    string filePath = @"wwwroot\ProductImages\" + fileName;
-                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-
-                    using (var stream = new FileStream(filePathDirectory, FileMode.Create))
-                    {
-                        productDto.Image.CopyTo(stream);
-                    }
-
                     var baseUrl = $"{Request.Scheme}://{Request.Host.Value}{Request.PathBase.Value}";
-                    product.ImageUrl = baseUrl + "/ProductImages/" + fileName;
-                    product.ImageLocalPath = filePath;
+                    var (imageUrl, imageLocalPath) = _productService.CreateProductImage(productDto.Image, product.ProductId, baseUrl);
+
+                    product.ImageUrl = imageUrl;
+                    product.ImageLocalPath = imageLocalPath;
                 }
                 else
                 {
@@ -160,11 +156,27 @@ namespace ECommerce.Services.ProductAPI.Controllers
 
         [HttpPut]
         [Authorize(Roles = "ADMIN")]
-        public IActionResult UpdateProduct([FromBody] ProductDto productDto)
+        public IActionResult UpdateProduct(ProductDto productDto)
         {
             try
             {
                 var product = _mapper.Map<Models.Product>(productDto);
+
+                if (productDto.Image != null)
+                {
+                    if (!string.IsNullOrEmpty(product.ImageLocalPath))
+                    {
+                        _productService.DeleteProductImage(product.ImageLocalPath);
+                    }
+
+                    var baseUrl = $"{Request.Scheme}://{Request.Host.Value}{Request.PathBase.Value}";
+                    var (imageUrl, imageLocalPath) = _productService.CreateProductImage(productDto.Image, product.ProductId, baseUrl);
+
+                    product.ImageUrl = imageUrl;
+                    product.ImageLocalPath = imageLocalPath;
+                }
+
+
                 _dbContext.Products.Update(product);
                 _dbContext.SaveChanges();
                 _response.Result = _mapper.Map<ProductDto>(product);
@@ -188,13 +200,7 @@ namespace ECommerce.Services.ProductAPI.Controllers
 
                 if (!string.IsNullOrEmpty(product.ImageLocalPath))
                 {
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
-                    FileInfo file = new FileInfo(filePath);
-
-                    if (file.Exists)
-                    {
-                        file.Delete();
-                    }
+                    _productService.DeleteProductImage(product.ImageLocalPath);
                 }
 
                 _dbContext.Products.Remove(product);
