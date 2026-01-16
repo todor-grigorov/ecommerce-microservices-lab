@@ -1,6 +1,7 @@
 ﻿using ECommerce.Frontend.Mvc.Dto;
 using ECommerce.Frontend.Mvc.Service.IService;
 using ECommerce.Frontend.Mvc.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,11 +16,13 @@ namespace ECommerce.Frontend.Mvc.Controllers
             _orderService = orderService;
         }
 
+        [Authorize]
         public IActionResult OrderIndex()
         {
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> OrderDetails(int orderId)
         {
             OrderHeaderDto? orderHeaderDto = new OrderHeaderDto();
