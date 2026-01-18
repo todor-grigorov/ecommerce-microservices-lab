@@ -1,8 +1,8 @@
-using ECommerce.Services.EmailAPI.Service;
-using ECommerce.Services.EmailAPI.Service.IService;
 using ECommerce.Services.RewardsApi.Data;
 using ECommerce.Services.RewardsApi.Extensions;
 using ECommerce.Services.RewardsApi.Messaging;
+using ECommerce.Services.RewardsApi.Service;
+using ECommerce.Services.RewardsApi.Service.IService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

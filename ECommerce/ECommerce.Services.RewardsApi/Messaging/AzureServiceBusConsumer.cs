@@ -1,6 +1,6 @@
 ﻿using Azure.Messaging.ServiceBus;
-using ECommerce.Services.EmailAPI.Service.IService;
 using ECommerce.Services.RewardsApi.Dto;
+using ECommerce.Services.RewardsApi.Service.IService;
 using Newtonsoft.Json;
 using System.Text;
 

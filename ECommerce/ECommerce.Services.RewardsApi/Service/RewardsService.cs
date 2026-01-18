@@ -1,10 +1,10 @@
-﻿using ECommerce.Services.EmailAPI.Service.IService;
-using ECommerce.Services.RewardsApi.Data;
+﻿using ECommerce.Services.RewardsApi.Data;
 using ECommerce.Services.RewardsApi.Dto;
 using ECommerce.Services.RewardsApi.Models;
+using ECommerce.Services.RewardsApi.Service.IService;
 using Microsoft.EntityFrameworkCore;
 
-namespace ECommerce.Services.EmailAPI.Service
+namespace ECommerce.Services.RewardsApi.Service
 {
     public class RewardsService : IRewardsService
     {

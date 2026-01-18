@@ -1,6 +1,6 @@
 ﻿using ECommerce.Services.RewardsApi.Dto;
 
-namespace ECommerce.Services.EmailAPI.Service.IService
+namespace ECommerce.Services.RewardsApi.Service.IService
 {
     public interface IRewardsService
     {

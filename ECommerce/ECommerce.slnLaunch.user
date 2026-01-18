@@ -33,10 +33,6 @@
       {
         "Path": "ECommerce.Services.RewardsApi\\ECommerce.Services.RewardsApi.csproj",
         "Action": "Start"
-      },
-      {
-        "Path": "ECommerce.Gateway.Api\\ECommerce.Gateway.Api.csproj",
-        "Action": "Start"
       }
     ]
   }
