@@ -34,7 +34,9 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ECommerce.Services.CouponAPI v1");
-    c.RoutePrefix = string.Empty;
+    c.RoutePrefix = app.Environment.IsDevelopment()
+        ? "swagger"
+        : string.Empty;
 });
 
 app.UseHttpsRedirection();
