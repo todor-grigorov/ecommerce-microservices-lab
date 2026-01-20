@@ -2,6 +2,7 @@
 using ECommerce.Services.ProdictAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ECommerce.Services.ProductAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119185712_SeedProductsUpdate")]
+    partial class SeedProductsUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,7 +63,7 @@ namespace ECommerce.Services.ProductAPI.Migrations
                             ProductId = 1,
                             CategoryName = "Appetizer",
                             Description = "A refreshing mix of chopped tomatoes, cucumbers, onions, peppers, and grated sirene (white brine cheese), named after the Shops region.",
-                            ImageUrl = "https://placehold.co/603x403",
+                            ImageUrl = "https://placehold.co/600x400",
                             Name = "Shopska Salad",
                             Price = 11.0
                         },
@@ -69,7 +72,7 @@ namespace ECommerce.Services.ProductAPI.Migrations
                             ProductId = 2,
                             CategoryName = "Appetizer",
                             Description = "Traditional Bulgarian salad, which is made of strained yogurt, cucumber, garlic, salt, usually cooking oil, dill, sometimes roasted peppers, walnuts and parsley.",
-                            ImageUrl = "https://placehold.co/602x402",
+                            ImageUrl = "https://placehold.co/600x400",
                             Name = "Snezhanka salad",
                             Price = 9.9900000000000002
                         },
@@ -78,7 +81,7 @@ namespace ECommerce.Services.ProductAPI.Migrations
                             ProductId = 3,
                             CategoryName = "Dessert",
                             Description = "Pastry consisting of thin sheets of dough that are filled with grated pumpkin, coarsely ground walnuts, sugar, and cinnamon.",
-                            ImageUrl = "https://placehold.co/601x401",
+                            ImageUrl = "https://placehold.co/600x400",
                             Name = "Tikvenik ",
                             Price = 10.99
                         },
