@@ -9,7 +9,7 @@ namespace ECommerce.Services.IdentityAPI.RabbitMQSender
         private readonly string _hostName;
         private readonly string _userName;
         private readonly string _password;
-        private IConnection _connection;
+        private IConnection? _connection;
 
         public RabbitMQAuthMessageSender()
         {
@@ -18,20 +18,22 @@ namespace ECommerce.Services.IdentityAPI.RabbitMQSender
             _password = "guest";
         }
 
-        public async void SendMessage<T>(T message, string queueName)
+        public async Task SendMessageAsync<T>(T message, string queueName)
         {
             var factory = new ConnectionFactory
             {
                 HostName = _hostName,
                 UserName = _userName,
-                Password = _password
+                Password = _password,
+                Port = 5672,
+                VirtualHost = "/",
             };
 
             _connection = await factory.CreateConnectionAsync();
 
             var channel = await _connection.CreateChannelAsync();
 
-            await channel.QueueDeclareAsync(queue: queueName);
+            await channel.QueueDeclareAsync(queueName, false, false, false, null);
             var json = JsonConvert.SerializeObject(message);
             var body = Encoding.UTF8.GetBytes(json);
             //var body = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(message);
