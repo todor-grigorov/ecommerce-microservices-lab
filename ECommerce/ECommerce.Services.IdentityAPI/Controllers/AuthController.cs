@@ -1,5 +1,6 @@
 ﻿using ECommerce.Services.CouponAPI.Dto;
 using ECommerce.Services.IdentityAPI.Dto;
+using ECommerce.Services.IdentityAPI.RabbitMQSender;
 using ECommerce.Services.IdentityAPI.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,15 +12,16 @@ namespace ECommerce.Services.IdentityAPI.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IAuthService _authService;
-        private readonly IServiceBus _serviceBus;
+        //private readonly IServiceBus _serviceBus;
+        private readonly IRabbitMQAuthMessageSender _messageBus;
         private readonly string? _registerUserQueue;
         protected ResponseDto _response;
 
-        public AuthController(IConfiguration configuration, IAuthService authService, IServiceBus serviceBus)
+        public AuthController(IConfiguration configuration, IAuthService authService, IRabbitMQAuthMessageSender messageBus)
         {
             _configuration = configuration;
             _authService = authService;
-            _serviceBus = serviceBus;
+            _messageBus = messageBus;
             _response = new ResponseDto();
             _registerUserQueue = configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue");
         }
@@ -46,7 +48,7 @@ namespace ECommerce.Services.IdentityAPI.Controllers
                 }
 
                 _response.Message = "User registered successfully.";
-                await _serviceBus.PublishMessageAsync(dto.Email, _registerUserQueue);
+                await _messageBus.SendMessageAsync(dto.Email, _registerUserQueue);
 
                 return Ok(_response);
             }
