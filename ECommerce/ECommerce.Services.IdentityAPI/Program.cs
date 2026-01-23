@@ -2,6 +2,7 @@
 using ECommerce.Integration.MessageBus;
 using ECommerce.Services.IdentityAPI.Data;
 using ECommerce.Services.IdentityAPI.Models;
+using ECommerce.Services.IdentityAPI.RabbitMQSender;
 using ECommerce.Services.IdentityAPI.Service;
 using ECommerce.Services.IdentityAPI.Service.IService;
 using Microsoft.AspNetCore.Identity;
@@ -24,7 +25,8 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IMessageBus, MessageBus>();
-builder.Services.AddScoped<IServiceBus, ServiceBus>();
+//builder.Services.AddScoped<IServiceBus, ServiceBus>();
+builder.Services.AddScoped<IRabbitMQAuthMessageSender, RabbitMQAuthMessageSender>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
