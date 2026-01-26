@@ -16,6 +16,7 @@ var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 optionsBuilder.UseNpgsql(configuration.GetConnectionString("postgresConnection"));
 
 // Add services to the container.
+builder.Services.AddHostedService<RabbitMQAuthConsumer>();
 builder.Services.AddSingleton<IEmailService>(new EmailService(optionsBuilder.Options));
 builder.Services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
 
