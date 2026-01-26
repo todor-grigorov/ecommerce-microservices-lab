@@ -20,26 +20,52 @@ namespace ECommerce.Services.IdentityAPI.RabbitMQSender
 
         public async Task SendMessageAsync<T>(T message, string queueName)
         {
-            var factory = new ConnectionFactory
+            if (ConnectionExists())
             {
-                HostName = _hostName,
-                UserName = _userName,
-                Password = _password,
-                Port = 5672,
-                VirtualHost = "/",
-            };
 
-            _connection = await factory.CreateConnectionAsync();
+                var channel = await _connection!.CreateChannelAsync();
 
-            var channel = await _connection.CreateChannelAsync();
+                await channel.QueueDeclareAsync(queueName, false, false, false, null);
+                var json = JsonConvert.SerializeObject(message);
+                var body = Encoding.UTF8.GetBytes(json);
+                //var body = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(message);
+                await channel.BasicPublishAsync(exchange: "",
+                                     routingKey: queueName,
+                                     body: body);
+            }
 
-            await channel.QueueDeclareAsync(queueName, false, false, false, null);
-            var json = JsonConvert.SerializeObject(message);
-            var body = Encoding.UTF8.GetBytes(json);
-            //var body = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(message);
-            await channel.BasicPublishAsync(exchange: "",
-                                 routingKey: queueName,
-                                 body: body);
         }
+
+        private async void CreateConnection()
+        {
+            try
+            {
+                var factory = new ConnectionFactory
+                {
+                    HostName = _hostName,
+                    UserName = _userName,
+                    Password = _password,
+                    Port = 5672,
+                    VirtualHost = "/",
+                };
+
+                _connection = await factory.CreateConnectionAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private bool ConnectionExists()
+        {
+            if (_connection != null)
+            {
+                return true;
+            }
+            CreateConnection();
+            return true;
+        }
+
     }
 }
