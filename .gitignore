@@ -12,3 +12,4 @@
 /ECommerce/ECommerce.Services.RewardsApi/Properties/PublishProfiles
 /ECommerce/ECommerce.Frontend.Mvc/Properties/PublishProfiles
 /ECommerce/ECommerce.Gateway.Api/Properties/PublishProfiles
+/ECommerce/ECommerce.Gateway.Api/ocelot.Production.json
