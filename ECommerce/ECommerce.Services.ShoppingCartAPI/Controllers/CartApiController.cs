@@ -2,6 +2,7 @@
 using ECommerce.Services.ShoppingCartAPI.Data;
 using ECommerce.Services.ShoppingCartAPI.Dto;
 using ECommerce.Services.ShoppingCartAPI.Models;
+using ECommerce.Services.ShoppingCartAPI.RabbitMQSender;
 using ECommerce.Services.ShoppingCartAPI.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,16 +18,17 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
         private readonly AppDbContext _dbContext;
         private readonly IProductService _productService;
         private readonly ICouponService _couponService;
-        private readonly IServiceBus _serviceBus;
+        //private readonly IServiceBus _serviceBus;
+        private readonly IRabbitMQAuthMessageSender _messageBus;
         private readonly IConfiguration _configuration;
 
-        public CartApiController(AppDbContext dbContext, IProductService productService, ICouponService couponService, IServiceBus serviceBus, IMapper mapper, IConfiguration configuration)
+        public CartApiController(AppDbContext dbContext, IProductService productService, ICouponService couponService, IRabbitMQAuthMessageSender messageBus, IMapper mapper, IConfiguration configuration)
         {
             _dbContext = dbContext;
             _productService = productService;
             _couponService = couponService;
-            _serviceBus = serviceBus;
-            _serviceBus = serviceBus;
+            //_serviceBus = serviceBus;
+            _messageBus = messageBus;
             _mapper = mapper;
             _configuration = configuration;
             _responseDto = new ResponseDto();
@@ -227,7 +229,8 @@ namespace ECommerce.Services.ShoppingCartAPI.Controllers
         {
             try
             {
-                await _serviceBus.PublishMessageAsync(cartDto, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue"));
+                //await _serviceBus.PublishMessageAsync(cartDto, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue"));
+                await _messageBus.SendMessageAsync(cartDto, _configuration.GetValue<string>("TopicAndQueueNames:EmailShoppingCartQueue"));
                 _responseDto.Result = true;
             }
             catch (Exception ex)

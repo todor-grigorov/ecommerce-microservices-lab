@@ -1,6 +1,7 @@
 using ECommerce.Integration.MessageBus;
 using ECommerce.Services.ShoppingCartAPI.Data;
 using ECommerce.Services.ShoppingCartAPI.Extensions;
+using ECommerce.Services.ShoppingCartAPI.RabbitMQSender;
 using ECommerce.Services.ShoppingCartAPI.Service;
 using ECommerce.Services.ShoppingCartAPI.Service.IService;
 using ECommerce.Services.ShoppingCartAPI.Utility;
@@ -22,21 +23,23 @@ builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
 builder.Services.AddScoped<ICouponService, CouponService>();
 builder.Services.AddScoped<IMessageBus, MessageBus>();
 
-builder.Services.AddScoped<IServiceBus, ServiceBus>(sp =>
-{
-    var connectionString = configuration.GetConnectionString("ServiceBusConnection");
+//builder.Services.AddScoped<IServiceBus, ServiceBus>(sp =>
+//{
+//    var connectionString = configuration.GetConnectionString("ServiceBusConnection");
 
-    if (string.IsNullOrWhiteSpace(connectionString))
-    {
-        throw new InvalidOperationException(
-            "ServiceBus connection string is not configured. " +
-            "Set 'ConnectionStrings:ServiceBus' via user secrets or configuration.");
-    }
+//    if (string.IsNullOrWhiteSpace(connectionString))
+//    {
+//        throw new InvalidOperationException(
+//            "ServiceBus connection string is not configured. " +
+//            "Set 'ConnectionStrings:ServiceBus' via user secrets or configuration.");
+//    }
 
-    var messageBus = sp.GetRequiredService<IMessageBus>();
+//    var messageBus = sp.GetRequiredService<IMessageBus>();
 
-    return new ServiceBus(connectionString, messageBus);
-});
+//    return new ServiceBus(connectionString, messageBus);
+//});
+builder.Services.AddSingleton<IRabbitMqConnectionProvider, RabbitMqConnectionProvider>();
+builder.Services.AddSingleton<IRabbitMQAuthMessageSender, RabbitMQAuthMessageSender>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
