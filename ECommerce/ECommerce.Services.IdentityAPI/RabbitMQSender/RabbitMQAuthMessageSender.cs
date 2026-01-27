@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
 
@@ -6,66 +7,76 @@ namespace ECommerce.Services.IdentityAPI.RabbitMQSender
 {
     public class RabbitMQAuthMessageSender : IRabbitMQAuthMessageSender
     {
-        private readonly string _hostName;
-        private readonly string _userName;
-        private readonly string _password;
-        private IConnection? _connection;
+        private readonly IRabbitMqConnectionProvider _connectionProvider;
+        private readonly RabbitMqOptions _options;
 
-        public RabbitMQAuthMessageSender()
+        public RabbitMQAuthMessageSender(IRabbitMqConnectionProvider connectionProvider,
+        IOptions<RabbitMqOptions> options)
         {
-            _hostName = "localhost";
-            _userName = "guest";
-            _password = "guest";
+            _connectionProvider = connectionProvider;
+            _options = options.Value;
         }
 
-        public async Task SendMessageAsync<T>(T message, string queueName)
+        public async Task SendMessageAsync<T>(T message, string queueName, CancellationToken ct = default)
         {
-            if (ConnectionExists())
+            var connection = await _connectionProvider.GetConnectionAsync(ct);
+
+            // Enable confirms at channel creation time
+            CreateChannelOptions? channelOptions = null;
+            if (_options.UsePublisherConfirms)
             {
-
-                var channel = await _connection!.CreateChannelAsync();
-
-                await channel.QueueDeclareAsync(queueName, false, false, false, null);
-                var json = JsonConvert.SerializeObject(message);
-                var body = Encoding.UTF8.GetBytes(json);
-                //var body = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(message);
-                await channel.BasicPublishAsync(exchange: "",
-                                     routingKey: queueName,
-                                     body: body);
+                channelOptions = new CreateChannelOptions(
+                    publisherConfirmationsEnabled: true,
+                    publisherConfirmationTrackingEnabled: true
+                );
             }
 
+            await using var channel = channelOptions is null
+                ? await connection.CreateChannelAsync()
+                : await connection.CreateChannelAsync(channelOptions);
+
+            await channel.QueueDeclareAsync(
+                queue: queueName,
+                durable: _options.DurableQueues,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null,
+                cancellationToken: ct);
+
+            var json = JsonConvert.SerializeObject(message);
+            var body = Encoding.UTF8.GetBytes(json);
+
+            var props = new BasicProperties
+            {
+                Persistent = _options.DurableQueues,
+                ContentType = "application/json"
+            };
+
+            // If confirms are enabled, awaiting BasicPublishAsync waits for the broker confirm.
+            // Use CancellationToken to enforce a timeout.
+            if (_options.UsePublisherConfirms)
+            {
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                cts.CancelAfter(TimeSpan.FromSeconds(5)); // confirm timeout
+
+                await channel.BasicPublishAsync(
+                    exchange: "",
+                    routingKey: queueName,
+                    mandatory: false,
+                    basicProperties: props,
+                    body: body,
+                    cancellationToken: cts.Token);
+            }
+            else
+            {
+                await channel.BasicPublishAsync(
+                    exchange: "",
+                    routingKey: queueName,
+                    mandatory: false,
+                    basicProperties: props,
+                    body: body,
+                    cancellationToken: ct);
+            }
         }
-
-        private async void CreateConnection()
-        {
-            try
-            {
-                var factory = new ConnectionFactory
-                {
-                    HostName = _hostName,
-                    UserName = _userName,
-                    Password = _password,
-                    Port = 5672,
-                    VirtualHost = "/",
-                };
-
-                _connection = await factory.CreateConnectionAsync();
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        private bool ConnectionExists()
-        {
-            if (_connection != null)
-            {
-                return true;
-            }
-            CreateConnection();
-            return true;
-        }
-
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IRabbitMQAuthMessageSender
     {
-        Task SendMessageAsync<T>(T message, string queueName);
+        Task SendMessageAsync<T>(T message, string queueName, CancellationToken ct = default);
     }
 }
